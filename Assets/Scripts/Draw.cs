@@ -29,7 +29,7 @@ public class Draw : MonoBehaviour
 
 
     //For brush application 
-    void Update(Vector3Int origin, Function function)
+    void Update()
     {
 
         Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y);  // added 9/3
@@ -42,14 +42,21 @@ public class Draw : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(Ray, out hit))
             {
+                if (hit.transform.tag == "Voxel")
+                {
+                    GameObject goVoxel = hit.transform.gameObject;
+                    Voxel hitVoxel = goVoxel.GetComponent<VoxelTrigger>().ThisVoxel;
+                    hitVoxel.VoxelFunction = Function.Bathroom;
+                }
+                /*
                 var go = Instantiate(Brush, hit.point + Vector3.up * 0.6f, Quaternion.identity, transform);
                 go.transform.localScale = Vector3.one * BrushSize;
-                
+                */
 			    //var toolType = transform.InverseTransformPoint(hit.point); // Added 3/7
             }
 
-            origin = new Vector3Int(Mathf.RoundToInt(v.x), (v.y), (v.z));
-            VoxelGrid.FillBucket(origin, Function);
+            //origin = new Vector3Int(Mathf.RoundToInt(v.x), (v.y), (v.z));
+            //VoxelGrid.FillBucket(origin, Function);
 
         }
 

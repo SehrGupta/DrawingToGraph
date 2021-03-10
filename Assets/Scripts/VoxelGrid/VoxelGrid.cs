@@ -249,6 +249,7 @@ public class VoxelGrid
 
     #region Public Methods
 
+    /*
     /// <summary>
     /// Tries to create a black rectangle from the
     /// specified origin and with the specified size
@@ -292,6 +293,7 @@ public class VoxelGrid
 
         return true;
     }
+    */
 
     /// <summary>
     /// Tries to create a black blob from the
@@ -324,7 +326,7 @@ public class VoxelGrid
                 Voxel[] neighbours = voxel.GetFaceNeighboursXY().ToArray();
                 foreach (var neighbour in neighbours)
                 {
-                    if (neighbour.Function == Function.Empty &&
+                    if (neighbour.VoxelFunction == Function.Empty &&
                         !newVoxels.Contains(neighbour) &&
                         !filledVoxels.Contains(neighbour))
                     {
@@ -347,7 +349,7 @@ public class VoxelGrid
         
         foreach (var voxel in filledVoxels)
         {
-            voxel.Function = function;
+            voxel.VoxelFunction = function;
         }
             //Coroutine here!
     }
@@ -374,7 +376,7 @@ public class VoxelGrid
                 if (pixel.r >pixel.g)
                 {
                     // Set respective color to voxel
-                    Voxels[x, y, layer].FColor = FunctionColor.Red;
+                    Voxels[x, y, layer].VoxelFunction = Function.Empty;
                 }
             }
         }

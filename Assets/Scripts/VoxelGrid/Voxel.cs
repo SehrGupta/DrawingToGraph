@@ -13,8 +13,23 @@ public class Voxel : IEquatable<Voxel>
     public Vector3 Center => (Index + _voxelGrid.Origin) * _size;
     public bool IsActive;
 
-    public FunctionColor FColor;
-    public Function Function;
+    
+    public Function VoxelFunction
+    {
+        get
+        {
+            return _function;
+        }
+        set
+        {
+            if (VoxelCollider != null)
+            {
+                var renderer = VoxelCollider.GetComponent<Renderer>();
+                renderer.material.SetColor("_Color", Constants.FunctionColors[value]);
+            }
+            _function = value;
+        }
+    }
 
     public GameObject VoxelCollider =  null;
 
@@ -24,7 +39,7 @@ public class Voxel : IEquatable<Voxel>
 
     public VoxelGrid _voxelGrid;             // changes, fix to protected
     protected float _size;
-
+    private Function _function;
     #endregion
 
     #region Contructors
@@ -42,7 +57,7 @@ public class Voxel : IEquatable<Voxel>
         _size = _voxelGrid.VoxelSize;
         IsActive = true;
         //FColor = FunctionColor.Empty;
-        Function = Function.Empty;
+        VoxelFunction = Function.Empty;
 
         if (createCollider)
         {
@@ -51,6 +66,9 @@ public class Voxel : IEquatable<Voxel>
             VoxelCollider.transform.localPosition = new Vector3(Index.x, Index.y, Index.z) * _size;
             VoxelCollider.name = $"{Index.x}_{Index.y}_{Index.z}";
             VoxelCollider.tag = "Voxel";
+            VoxelTrigger trigger = VoxelCollider.AddComponent<VoxelTrigger>();
+            trigger.ThisVoxel = this;
+
         }
     }
 

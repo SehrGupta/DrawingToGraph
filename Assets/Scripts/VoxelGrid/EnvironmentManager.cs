@@ -21,12 +21,10 @@ public class EnvironmentManager : MonoBehaviour
     void Start()
     {
         // Initialise the voxel grid
-        Vector3Int gridSize = new Vector3Int(160, 100, 1);
+        Vector3Int gridSize = new Vector3Int(50, 1, 30);
         _voxelGrid = new VoxelGrid(gridSize, Vector3.zero, 1, parent: this.transform);
 
-        
-
-        // Set the random engine's seed
+                // Set the random engine's seed
         Random.InitState(_randomSeed);
     }
 
@@ -85,7 +83,6 @@ public class EnvironmentManager : MonoBehaviour
     /// Draws the voxels according to it's state and Function Corlor
     /// </summary>
    
-
     void DrawVoxelsFunction()
     {
         foreach (var voxel in _voxelGrid.Voxels)
@@ -93,7 +90,7 @@ public class EnvironmentManager : MonoBehaviour
             if (voxel.IsActive)
             {
                 Vector3 pos = (Vector3)voxel.Index * _voxelGrid.VoxelSize + transform.position;
-                var color = _voxelGrid.FunctionColors[voxel.Function];
+                var color = _voxelGrid.FunctionColors[voxel.VoxelFunction];
                 Drawing.DrawCube(pos, _voxelGrid.VoxelSize, color);
                 
                // Debug.Log(_voxelGrid.Voxels.Length); 
