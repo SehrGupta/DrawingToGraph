@@ -13,7 +13,7 @@ public class Voxel : IEquatable<Voxel>
     public Vector3 Center => (Index + _voxelGrid.Origin) * _size;
     public bool IsActive;
 
-    public FunctionColor FColor;
+    //public FunctionColor FColor;
     public Function Function;
 
     public GameObject VoxelCollider =  null;
@@ -52,6 +52,7 @@ public class Voxel : IEquatable<Voxel>
             VoxelCollider.name = $"{Index.x}_{Index.y}_{Index.z}";
             VoxelCollider.tag = "Voxel";
         }
+       
     }
 
     /// <summary>
@@ -103,6 +104,8 @@ public class Voxel : IEquatable<Voxel>
 
         if (z != s.z - 1) yield return _voxelGrid.Voxels[x, y, z + 1];
         if (z != 0) yield return _voxelGrid.Voxels[x, y, z - 1];
+
+        //Debug.Log("GetFaceNeighbours");
     }
 
     public Voxel[] GetFaceNeighboursArray()
@@ -133,6 +136,7 @@ public class Voxel : IEquatable<Voxel>
         else result[5] = null;
 
         return result;
+        
     }
 
     /// <summary>
@@ -155,6 +159,7 @@ public class Voxel : IEquatable<Voxel>
     public bool Equals(Voxel other)
     {
         return (other != null) && (Index == other.Index);
+       
     }
 
     /// <summary>
@@ -167,4 +172,5 @@ public class Voxel : IEquatable<Voxel>
     }
 
     #endregion
+
 }

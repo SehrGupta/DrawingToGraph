@@ -7,6 +7,8 @@ using System.Linq;
 public class VoxelGrid
 {
     //float degrees = 180;
+    //private Vector3Int origin;
+    public Vector3Int v;
 
     #region Public fields
 
@@ -22,13 +24,19 @@ public class VoxelGrid
     public Dictionary<Function, Color> FunctionColors = new Dictionary<Function, Color>()
     {
         { Function.Empty, Color.white },
-        { Function.Kitchen, new Color(55, 93, 126) },
-        { Function.LivingRoom, new Color(104, 227, 189) },
-        { Function.Bathroom, new Color(198, 109, 134) },
-        { Function.Bedroom, new Color(255, 100, 132) },
-        { Function.Closet, new Color(239, 131, 41) },
-        { Function.Courtyard, new Color(255, 206, 88) },
-        { Function.Dining, new Color(114, 90, 122) }
+        { Function.Kitchen, new Color(0.97f, 0.28f, 0.44f) },
+        { Function.LivingRoom, new Color(0.83f, 0.92f, 0.97f) },
+        { Function.Bathroom, new Color(0.53f, 0.85f, 0.79f) },
+        { Function.Bedroom, new Color(0.69f, 0.68f, 0.76f) },
+        { Function.Closet, new Color(0.89f, 0.80f, 0.30f) },
+        { Function.Courtyard, new Color(0.1f, 0.44f, 0.4f) },
+        { Function.Dining, new Color(0.64f, 0.74f, 0.67f) },
+        { Function.Wall, new Color(0f, 0f, 0f) },
+        { Function.SharableSpace, new Color(0.61f, 0.61f, 0.61f) },
+        { Function.Connector, new Color(1f, 1f, 1f) }
+        
+
+        
     };
 
     #endregion
@@ -47,40 +55,30 @@ public class VoxelGrid
         GridSize = size;
         Origin = origin;
         VoxelSize = voxelSize;
-
         Voxels = new Voxel[GridSize.x, GridSize.y, GridSize.z];
-
         for (int x = 0; x < GridSize.x; x++)
         {
             for (int y = 0; y < GridSize.y; y++)
             {
                 for (int z = 0; z < GridSize.z; z++)
                 {
-                    if (y == 0)
-                    {
-                        Voxels[x, y, z] = new Voxel(
-                            new Vector3Int(x, y, z),
-                            this,
-                            createCollider: true,
-                            parent: parent);
-                    }
-                    else
-                    {
-                        Voxels[x, y, z] = new Voxel(
-                            new Vector3Int(x, y, z),
-                            this);
-                    }
-                    //Vector3 Voxel = new Vector3(0, degrees, 0);       //here
+                    Voxels[x, y, z] = new Voxel(
+                      new Vector3Int(x, y, z),
+                      this,
+                      createCollider: true,
+                      parent: parent);
                 }
             }
         }
-
         MakeFaces();
         MakeCorners();
         MakeEdges();
+        
     }
 
     
+
+
 
     #endregion
 
@@ -223,8 +221,10 @@ public class VoxelGrid
                     yield return Corners[x, y, z];
                 }
     }
-
-    /// <summary>
+    
+    
+    
+        /// <summary>
     /// Get the Edges of the <see cref="VoxelGrid"/>
     /// </summary>
     /// <returns>All the edges</returns>
@@ -258,7 +258,7 @@ public class VoxelGrid
     /// <param name="depth">The depth of the rectangle, in Z</param>
     /// <param name="layer">The layer to draw in, default is 0</param>
     /// <returns>If the process was successful</returns>
-    public bool CreateBlackRectangle(Vector3Int origin, int width, int depth, int layer = 0)
+    /*public bool CreateBlackRectangle(Vector3Int origin, int width, int depth, int layer = 0)
     {
         FunctionColor fcolor = FunctionColor.Black;
 
@@ -291,7 +291,7 @@ public class VoxelGrid
         }
 
         return true;
-    }
+    }*/
 
     /// <summary>
     /// Tries to create a black blob from the
@@ -303,17 +303,20 @@ public class VoxelGrid
     /// <param name="flat">If the blob should be located on the first layer or use all</param>
     /// <returns></returns>
     
-    public void FillBucket(Vector3Int origin, Function function)
+    public void FillBucket(Voxel origin, Function function)
     {
         // Create the list to store the blob voxels
         List<Voxel> filledVoxels = new List<Voxel>();
-        
+
         // Check if the origin is valid and add it to the list of voxels
-        if (Util.ValidateIndex(GridSize, origin))
+        if (origin.Function == Function.Empty)
         {
-            filledVoxels.Add(Voxels[origin.x, origin.y, origin.z]);
+            filledVoxels.Add(origin);
         }
         else return;
+
+        Debug.Log("filledVoxels");
+
 
         bool filled = false;
         while (!filled)
@@ -332,6 +335,7 @@ public class VoxelGrid
                     }
                 }
             }
+            
             if (newVoxels.Count == 0)
             {
                 filled = true;
@@ -349,18 +353,40 @@ public class VoxelGrid
         {
             voxel.Function = function;
         }
-            //Coroutine here!
+        
+
+
+        //origin = new Vector3Int(Mathf.RoundToInt(v.x), (v.y), (v.z));
+        //FillBucket (origin, Function.Bathroom);
+        //FillBucket (origin, Function.Kitchen);
+        //FillBucket (origin, Function.Bedroom);
+        //FillBucket (origin, Function.Dining);
+        //FillBucket (origin, Function.LivingRoom);
+        //FillBucket (origin, Function.Closet);
+        //FillBucket (origin, Function.Courtyard);
+        //Debug.Log("FillBucket");
+        //Coroutine here!
     }
 
-    
-    
+    /*IEnumerator FillBucket()
+    {
+        WaitForSeconds wait = new WaitForSeconds(0.05f);
+    }
+
+    public void StartFillBucket()
+    {
+        StartCoroutine(FillBucket);
+    }*/
+
+
+
 
     /// <summary>
     /// Reads an image pixel data and set the red pixels to the grid
     /// </summary>
     /// <param name="image">The reference image</param>
     /// <param name="layer">The target layer</param>
-    public void SetStatesFromImage(Texture2D image, int layer = 0)
+    /*public void SetStatesFromImage(Texture2D image, int layer = 0)
     {
         // Iterate through the XY plane
         for (int x = 0; x < GridSize.x; x++)
@@ -378,7 +404,7 @@ public class VoxelGrid
                 }
             }
         }
-    }
+    }*/
 
 
     #endregion
@@ -387,7 +413,7 @@ public class VoxelGrid
 /// <summary>
 /// Color coded values
 /// </summary>
-public enum FunctionColor
+/*public enum FunctionColor
 {
     Empty = -1,
     Black = 0,
@@ -396,7 +422,7 @@ public enum FunctionColor
     Green = 3,
     Cyan = 4,
     Magenta = 5
-}
+}*/
 
 public enum Function
 {
@@ -404,9 +430,12 @@ public enum Function
     Kitchen,
     Bedroom,
     Bathroom,
-    Door,
+    //Eraser,
     LivingRoom,
     Closet,
     Dining,
-    Courtyard
+    Courtyard,
+    Wall,
+    SharableSpace,
+    Connector
 }

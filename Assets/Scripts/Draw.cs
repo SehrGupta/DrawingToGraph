@@ -14,7 +14,7 @@ public class Draw : MonoBehaviour
 
   public Vector3Int v;
   //public new Vector3Int origin;
-  //private Vector3Int origin;
+  private Vector3Int origin;
   
 
 
@@ -29,7 +29,7 @@ public class Draw : MonoBehaviour
 
 
     //For brush application 
-    void Update(Vector3Int origin, Function function)
+    void Update()
     {
 
         Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y);  // added 9/3
@@ -48,8 +48,7 @@ public class Draw : MonoBehaviour
 			    //var toolType = transform.InverseTransformPoint(hit.point); // Added 3/7
             }
 
-            origin = new Vector3Int(Mathf.RoundToInt(v.x), (v.y), (v.z));
-            VoxelGrid.FillBucket(origin, Function);
+            
 
         }
 
