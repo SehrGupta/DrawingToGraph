@@ -21,23 +21,9 @@ public class VoxelGrid
     public Vector3 Corner;
     public float VoxelSize { get; private set; }
 
-    public Dictionary<Function, Color> FunctionColors = new Dictionary<Function, Color>()
-    {
-        { Function.Empty, Color.white },
-        { Function.Kitchen, new Color(0.97f, 0.28f, 0.44f) },
-        { Function.LivingRoom, new Color(0.83f, 0.92f, 0.97f) },
-        { Function.Bathroom, new Color(0.53f, 0.85f, 0.79f) },
-        { Function.Bedroom, new Color(0.69f, 0.68f, 0.76f) },
-        { Function.Closet, new Color(0.89f, 0.80f, 0.30f) },
-        { Function.Courtyard, new Color(0.1f, 0.44f, 0.4f) },
-        { Function.Dining, new Color(0.64f, 0.74f, 0.67f) },
-        { Function.Wall, new Color(0f, 0f, 0f) },
-        { Function.SharableSpace, new Color(0.61f, 0.61f, 0.61f) },
-        { Function.Connector, new Color(1f, 1f, 1f) }
-        
+    public Dictionary<Function, Material> FunctionColors;
 
-        
-    };
+
 
     #endregion
 
@@ -52,9 +38,31 @@ public class VoxelGrid
     /// <param name="voxelSize">The size of each <see cref="Voxel"/></param>
     public VoxelGrid(Vector3Int size, Vector3 origin, float voxelSize, Transform parent = null)
     {
+
         GridSize = size;
         Origin = origin;
         VoxelSize = voxelSize;
+
+        FunctionColors = new Dictionary<Function, Material>()
+    {
+        { Function.Empty, Resources.Load<Material>("Material/Voxel/Empty") },
+        { Function.Kitchen, Resources.Load<Material>("Material/Voxel/Kitchen") },
+        { Function.LivingRoom, Resources.Load<Material>("Material/Voxel/LivingRoom") },
+        { Function.Bathroom, Resources.Load<Material>("Material/Voxel/Bathroom") },
+        { Function.Bedroom, Resources.Load<Material>("Material/Voxel/Bedroom") },
+        { Function.Closet, Resources.Load<Material>("Material/Voxel/Closet") },
+        { Function.Courtyard, Resources.Load<Material>("Material/Voxel/Courtyard")},
+        { Function.Dining, Resources.Load<Material>("Material/Voxel/Dining") },
+        { Function.Wall, Resources.Load<Material>("Material/Voxel/Wall") },
+        { Function.SharableSpace, Resources.Load<Material>("Material/Voxel/SharableSpace") },
+        { Function.Connector, Resources.Load<Material>("Material/Voxel/Connector") }
+
+
+
+
+    };
+
+
         Voxels = new Voxel[GridSize.x, GridSize.y, GridSize.z];
         for (int x = 0; x < GridSize.x; x++)
         {

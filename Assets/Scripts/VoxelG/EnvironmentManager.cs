@@ -39,7 +39,7 @@ public class EnvironmentManager : MonoBehaviour
     {
         // Draw the voxels according to their Function Colors
         //DrawVoxels();
-        DrawVoxelsFunction();
+        //DrawVoxelsFunction();
 
         // Use the V key to switch between showing voids
         if (Input.GetKeyDown(KeyCode.V))
@@ -268,7 +268,7 @@ public class EnvironmentManager : MonoBehaviour
             {
                 Vector3 pos = (Vector3)voxel.Index * _voxelGrid.VoxelSize + transform.position;
                 var color = _voxelGrid.FunctionColors[voxel.Function];
-                Drawing.DrawCube(pos, _voxelGrid.VoxelSize, color, sizeFactor: 1f);
+                Drawing.DrawCube(pos, _voxelGrid.VoxelSize,Color.red, sizeFactor: 1f);
 
                 // Debug.Log(_voxelGrid.Voxels.Length); 
             }

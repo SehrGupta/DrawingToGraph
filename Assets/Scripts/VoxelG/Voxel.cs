@@ -14,7 +14,21 @@ public class Voxel : IEquatable<Voxel>
     public bool IsActive;
 
     //public FunctionColor FColor;
-    public Function Function;
+    public Function Function
+    {
+        get 
+        {
+            return _function;
+        }
+        set 
+        {
+            _function = value;
+            var renderer = VoxelCollider.GetComponent<MeshRenderer>();
+            renderer.material = _voxelGrid.FunctionColors[value];
+        }
+    }
+
+    private Function _function;
 
     public GameObject VoxelCollider =  null;
 
@@ -42,17 +56,20 @@ public class Voxel : IEquatable<Voxel>
         _size = _voxelGrid.VoxelSize;
         IsActive = true;
         //FColor = FunctionColor.Empty;
-        Function = Function.Empty;
+        
 
         if (createCollider)
         {
             var colliderPrefab = Resources.Load<GameObject>("Prefabs/VoxelCollider");
             VoxelCollider = GameObject.Instantiate(colliderPrefab, parent, true);
             VoxelCollider.transform.localPosition = new Vector3(Index.x, Index.y, Index.z) * _size;
+            VoxelCollider.transform.localScale = Vector3.one * _size;
             VoxelCollider.name = $"{Index.x}_{Index.y}_{Index.z}";
             VoxelCollider.tag = "Voxel";
         }
-       
+
+        Function = Function.Empty;
+
     }
 
     /// <summary>

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DrawingAnalyser
@@ -55,7 +56,7 @@ public class DrawingAnalyser
             List<Voxel> newVoxels = new List<Voxel>();
             foreach (var voxel in filledVoxels)
             {
-                Voxel[] neighbours = voxel.GetFaceNeighboursXY().ToArray;
+                Voxel[] neighbours = voxel.GetFaceNeighboursXY().ToArray();
                 foreach (var neighbour in neighbours)
                 {
                     if (neighbour.Function == Function &&
