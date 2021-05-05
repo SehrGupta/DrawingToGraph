@@ -260,24 +260,49 @@ public class EnvironmentManager : MonoBehaviour
     /// </summary>
 
 
-    void DrawVoxelsFunction()
-    {
-        foreach (var voxel in _voxelGrid.Voxels)
-        {
-            if (voxel.IsActive)
-            {
-                Vector3 pos = (Vector3)voxel.Index * _voxelGrid.VoxelSize + transform.position;
-                var color = _voxelGrid.FunctionColors[voxel.Function];
-                Drawing.DrawCube(pos, _voxelGrid.VoxelSize,Color.red, sizeFactor: 1f);
+    
 
-                // Debug.Log(_voxelGrid.Voxels.Length); 
-            }
-        }
+    
+    public void AnalyseDrawing()
+    {
+        GetAllRooms();
+
         
     }
-
     
-    
+    public List<Room>GetAllRooms()
+    {
+        //Get all the voxels in the drawing
+        //remove all wall, connection,  and empty voxels out of the list
+        //While VoxelsToDo Is not empty
+        ////Start with the first voxel in the list
+        ////Add a new room with the voxelFunction as a function to the list of rooms
+        ////Add the first voxel to the room
+        ////remove the first voxel from the VoxelsToDo list
+        ////loop untill no neighbours can be found
+        //////Find all neighbours of the first voxel
+        //////Check if the neighbours have the same function
+        //////add neighbours to the room and remove voxels from VoxelsToDo
+        
 
+
+        return new List<Room>();
+    }
+
+    public List<Connection> GetAllConnections()
+    {
+        //Same procedure as for getting rooms, but filter out the connection voxels
+
+        //Find all the connected rooms
+        ////Loop over all the voxels in the connection
+        //////Find all neighbours
+        ////////Loop over all neighbours
+        /////////If neighbour is not in the list allready, add neighbour to the connected room list
+        //Add first item in connectedroomlist to source
+        //Add second item in connectedroomlist to target
+        //Create a graph using the Rooms as vertices and the connections as edges
+
+        return new List<Connection>();
+    }
     #endregion
 }

@@ -26,19 +26,7 @@ public class VoxelSpace : MonoBehaviour
     #region Constructors
 
     
-    public class Room
-    {
-        public Function RoomFunction;
-        public Vector3 CentrePoint;
-        public int Area;//== amount of voxels
-        public List<Voxel> Voxels;
-
-        public void AnalyseRoom()
-        {
-            //Get centrepoint from voxel list
-        }
-
-    }
+   
    
 
     #endregion
