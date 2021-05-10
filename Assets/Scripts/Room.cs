@@ -10,7 +10,7 @@ public class Room
     public int Area;//== amount of voxels
     public List<Voxel> Voxels;
 
-    //Constructor
+#region Constructor
     public Room (List<Voxel> voxels)
     {
         Voxels = voxels;
@@ -20,5 +20,8 @@ public class Room
     {
         //Get centrepoint from voxel list
     }
+
+    #endregion
+
 
 }

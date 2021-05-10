@@ -11,14 +11,23 @@ public class VoxelSpace : MonoBehaviour
     int n;
     VoxelGrid _voxelGrid;
     public GameObject GONode;
+    public GameObject Done;
 
     #endregion
 
     #region Button
-    public void OnButtonPress()
+   void Update()
     {
         n++;
+        var done = GameObject.Find("Plane/Canvas/Done");
+       /* if (Input.GetKeyDown(Plane.Canvas.Done))
+            EnvironmentManager.GetAllRooms();*/
         Debug.Log("Done" + n + "times.");
+    }
+
+    void CreateNode()
+    {
+        var node = GameObject.Find("Node");
     }
 
     #endregion
