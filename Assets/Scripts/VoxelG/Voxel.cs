@@ -12,9 +12,11 @@ public class Voxel : IEquatable<Voxel>
     public List<Face> Faces = new List<Face>(6);
     public Vector3 Center => (Index + _voxelGrid.Origin) * _size;
     public bool IsActive;
+    
+    public Room InRoom;
 
     //public FunctionColor FColor;
-    public Function Function
+    public Function VoxelFunction
     {
         get 
         {
@@ -68,7 +70,7 @@ public class Voxel : IEquatable<Voxel>
             VoxelCollider.tag = "Voxel";
         }
 
-        Function = Function.Empty;
+        VoxelFunction = Function.Empty;
 
     }
 

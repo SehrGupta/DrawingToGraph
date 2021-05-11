@@ -38,7 +38,7 @@ public class DrawingAnalyser
 
         ///To transform from drawing to graph, AFTER the use finishes drawing
         // Check if the origin is valid and add it to the list of voxels
-        if (origin.Function == Function)
+        if (origin.VoxelFunction == Function)
         {
             new GameObject(); //create node
         }
@@ -59,12 +59,12 @@ public class DrawingAnalyser
                 Voxel[] neighbours = voxel.GetFaceNeighboursXY().ToArray();
                 foreach (var neighbour in neighbours)
                 {
-                    if (neighbour.Function == Function &&
+                    if (neighbour.VoxelFunction == Function &&
                         newVoxels.Contains(neighbour) &&
                         filledVoxels.Contains(neighbour))
                     {
                         //Create node of same colour;
-                        voxel.Function = function;
+                        voxel.VoxelFunction = function;
                     }
                 }
             }

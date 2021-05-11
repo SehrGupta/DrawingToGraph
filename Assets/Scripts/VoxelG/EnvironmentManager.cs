@@ -20,6 +20,8 @@ public class EnvironmentManager : MonoBehaviour
 
     private Function _selectedFunction;
 
+    private List<Room> _rooms;
+
     #endregion
 
     #region Unity Standard Methods
@@ -60,7 +62,7 @@ public class EnvironmentManager : MonoBehaviour
                 var voxel = SelectVoxel();
                 if (voxel != null)
                 {
-                    voxel.Function = _selectedFunction;
+                    voxel.VoxelFunction = _selectedFunction;
                 }
                 else
                 {
@@ -264,128 +266,70 @@ public class EnvironmentManager : MonoBehaviour
     
 
     
-    public void AnalyseDrawing()
+    public void AnalyseRooms()
     {
-        //GetAllRooms();
+        _rooms = new List<Room>();
 
+        var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
+        v.VoxelFunction != Function.Empty &&
+        v.VoxelFunction != Function.Connector &&
+        v.VoxelFunction != Function.SharableSpace).ToList();
+
+        while (voxelsToCheck.Count > 0)
+        {
+            var start = voxelsToCheck[0];
+            List<Voxel> roomVoxels = new List<Voxel>();
+            roomVoxels.Add(start);
+
+            List<List<Voxel>> bfsStepVoxels = new List<List<Voxel>>();
+            bfsStepVoxels.Add(roomVoxels);
+            
+
+            bool foundNewVoxels = true;
+            while (foundNewVoxels)
+            {
+                foundNewVoxels = false;
+
+                List<Voxel> newVoxels = new List<Voxel>();
+                foreach (var voxel in bfsStepVoxels.Last())
+                {
+                    var neighbours = voxel.GetFaceNeighboursXY();
+                    foreach (var neighbour in neighbours)
+                    {
+                        if (neighbour.VoxelFunction == start.VoxelFunction && voxelsToCheck.Contains(neighbour) && !newVoxels.Contains(neighbour))
+                        {
+                            foundNewVoxels = true;
+                            newVoxels.Add(neighbour);
+                            voxelsToCheck.Remove(neighbour);
+                        }
+                    }
+                }
+                bfsStepVoxels.Add(newVoxels);
+            }
+
+            roomVoxels = bfsStepVoxels.SelectMany(l => l.Select(v => v)).ToList();
+
+            _rooms.Add(new Room(roomVoxels));
+
+        }
+        Debug.Log($"Found {_rooms.Count} rooms");
+    }
+
+    public void AnalyseConnections()
+    {
+        // Find the voxels of type connection
         
+        // Get the voxels that make up this connector
+        // Get the neighbours of the connector
+        // Find out which rooms the neighbours belong to
+        // Store in the rooms their neighbouring rooms
+       
+
     }
 
     
-    public List<Room> GetAllRooms(Voxel origin, Function function)
-    {
-        //Queue<Voxel> queue = new Queue<Voxel>();
-        //HashSet<Voxel> exploreVoxels = new HashSet<Voxel>();
-        //queue.Enqueue(Voxel);
-        List<Voxel> filledVoxels = new List<Voxel>();
 
-       if (Input.GetKeyDown(KeyCode.D))       // Correct it with done button replacement
-       {
-            //Remove all wall, connector, sharable space & empty voxels
-            if (function == Function.Wall || function == Function.SharableSpace || function == Function.Connector)
-            {
-                var voxel = SelectVoxel();
-                if (voxel != null)
-                {
-                    voxel.Function = Function.Empty;
-                }
-            }
-       }
-
-
-
-        bool filled = true;
-        while (filled)
-        {
-            List<Voxel> newVoxels = new List<Voxel>();
-            foreach (var voxel in filledVoxels)
-            {
-                Voxel[] neighbours = voxel.GetFaceNeighboursXY().ToArray();
-                foreach (var neighbour in neighbours)
-                {
-                    if (neighbour.Function == function &&
-                        newVoxels.Contains(neighbour) &&
-                        filledVoxels.Contains(neighbour))
-                    {
-
-                        //return new List<Room>();
-                        List<Room> GetAllRooms = new List<Room>();
-                    }
-
-                }
-            }
-
-           //continue the loop until all colours create a new room
-
-        }
-
-
-
-        //Get all the voxels in the drawing
-        //remove all wall, connection,  and empty voxels out of the list
-        //While VoxelsToDo Is not empty
-        ////Start with the first voxel in the list
-        ////Add a new room with the voxelFunction as a function to the list of rooms
-        ////Add the first voxel to the room
-        ////remove the first voxel from the VoxelsToDo list
-        ////loop untill no neighbours can be found
-        //////Find all neighbours of the first voxel
-        //////Check if the neighbours have the same function
-        //////add neighbours to the room and remove voxels from VoxelsToDo
-
-
-
-        return new List<Room>();
-    }
-
-    public List<Connection> GetAllConnections(Voxel origin, Function function, Room Source, Room End, List<Voxel> voxels)
-    {
-        //Same procedure as for getting rooms, but filter out the connection voxels
-
-        //Find all the connected rooms
-        ////Loop over all the voxels in the connection
-        //////Find all neighbours
-        ///////Loop over all neighbours
-        /////////If neighbour is not in the list allready, add neighbour to the connected room list
-        bool filled = true;
-        while (filled)
-        {
-            List<Voxel> newVoxels = new List<Voxel>();
-            foreach (var voxel in filledVoxels)
-            {
-                Voxel[] neighbours = voxel.GetFaceNeighboursXY().ToArray();
-                foreach (var neighbour in neighbours)
-                {
-                    if (neighbour.Function == Function.Connector)
-                    {
-
-                        //return new List<Room>();
-                        List<Connection> GetAllRooms = new List<Connection>();
-                    }
-
-                }
-            }
-
-            
-
-        }
-
-        /*foreach (var Connection in Room)
-        {
-            if()
-        }*/
-
-
-
-
-
-
-        //Add first item in connectedroomlist to source
-        //Add second item in connectedroomlist to target
-        //Create a graph using the Rooms as vertices and the connections as edges
-
-        return new List<Connection>();
-    }
+    
 
     void BFS (Vector3 Source, Vector3 End, Function function)
     {

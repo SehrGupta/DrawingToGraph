@@ -317,7 +317,7 @@ public class VoxelGrid
         List<Voxel> filledVoxels = new List<Voxel>();
 
         // Check if the origin is valid and add it to the list of voxels
-        if (origin.Function == Function.Empty)
+        if (origin.VoxelFunction == Function.Empty)
         {
             filledVoxels.Add(origin);
         }
@@ -335,7 +335,7 @@ public class VoxelGrid
                 Voxel[] neighbours = voxel.GetFaceNeighboursXY().ToArray();
                 foreach (var neighbour in neighbours)
                 {
-                    if (neighbour.Function == Function.Empty &&
+                    if (neighbour.VoxelFunction == Function.Empty &&
                         !newVoxels.Contains(neighbour) &&
                         !filledVoxels.Contains(neighbour))
                     {
@@ -359,7 +359,7 @@ public class VoxelGrid
         
         foreach (var voxel in filledVoxels)
         {
-            voxel.Function = function;
+            voxel.VoxelFunction = function;
         }
         
 
@@ -415,6 +415,11 @@ public class VoxelGrid
     }*/
 
 
+    public IEnumerable<Voxel> GetFlattenedVoxels()
+    {
+        foreach (var voxel in Voxels) yield return voxel;
+    }
+
     #endregion
 }
 
@@ -438,7 +443,6 @@ public enum Function
     Kitchen,
     Bedroom,
     Bathroom,
-    //Eraser,
     LivingRoom,
     Closet,
     Dining,
