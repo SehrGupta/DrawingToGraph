@@ -13,11 +13,11 @@ public class MainCamera : MonoBehaviour
 
     void Update()
     {
-        const float rotateSpeed = 4.0f;
+        //const float rotateSpeed = 4.0f;
         const float panSpeed = 0.4f;
 
         bool pan = Input.GetAxis("Pan") == 1.0f;
-        bool rotate = Input.GetAxis("Rotate") == 1.0f;
+        //bool rotate = Input.GetAxis("Rotate") == 1.0f;
 
         if (pan)
         {
@@ -28,14 +28,14 @@ public class MainCamera : MonoBehaviour
             transform.position += vector;
             _target += vector;
         }
-        else if (rotate)
+        /*else if (rotate)
         {
             float yaw = Input.GetAxis("Mouse X") * rotateSpeed;
             float pitch = -Input.GetAxis("Mouse Y") * rotateSpeed;
 
             transform.RotateAround(_target, Vector3.up, yaw);
             transform.RotateAround(_target, transform.rotation * Vector3.right, pitch);
-        }
+        }*/
 
         float zoom = Input.GetAxis("Mouse ScrollWheel");
         if (zoom != 0)

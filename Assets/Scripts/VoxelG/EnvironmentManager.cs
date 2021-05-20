@@ -15,12 +15,12 @@ public class EnvironmentManager : MonoBehaviour
     private Vector3Int origin;
     int _randomSeed = 666;
     public List<Voxel> filledVoxels;
-
     bool _showVoids = true;
 
     private Function _selectedFunction;
 
     private List<Room> _rooms;
+    private List<Connection> _connections;
 
     #endregion
 
@@ -30,7 +30,8 @@ public class EnvironmentManager : MonoBehaviour
     {
         _selectedFunction = Function.Wall;
         // Initialise the voxel grid
-        Vector3Int gridSize = new Vector3Int(80, 50, 1);
+        Vector3Int gridSize = new Vector3Int(200, 125, 1);
+ 
         _voxelGrid = new VoxelGrid(gridSize, Vector3.zero, 2, parent: this.transform);
 
         // Set the random engine's seed
@@ -153,7 +154,6 @@ public class EnvironmentManager : MonoBehaviour
     Voxel SelectVoxel()
     {
         Voxel selected = null;
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
@@ -317,13 +317,59 @@ public class EnvironmentManager : MonoBehaviour
 
     public void AnalyseConnections()
     {
+        _connections = new List<Connection>();
+
         // Find the voxels of type connection
+        var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
+        v.VoxelFunction != Function.Empty &&
+        v.VoxelFunction != Function.SharableSpace &&
+        v.VoxelFunction == Function.Connector).ToList();
+
         
-        // Get the voxels that make up this connector
-        // Get the neighbours of the connector
-        // Find out which rooms the neighbours belong to
-        // Store in the rooms their neighbouring rooms
+        
+            // Get the voxels that make up this connector
+            // Get the neighbours of the connector
+            // Find out which rooms the neighbours belong to
+            // Store in the rooms their neighbouring rooms
+            while (voxelsToCheck.Count > 0)
+            {
+                var start = voxelsToCheck[0];
+                List<Voxel> connectionVoxels = new List<Voxel>();
+                connectionVoxels.Add(start);
+
+                List<List<Voxel>> bfsStepVoxels = new List<List<Voxel>>();
+                bfsStepVoxels.Add(connectionVoxels);
+
+                bool foundNewVoxels = true;
+                while (foundNewVoxels)
+                {
+                    foundNewVoxels = false;
+
+                    List<Voxel> newVoxels = new List<Voxel>();
+                    foreach (var voxel in bfsStepVoxels.Last())
+                    {
+                        var neighbours = voxel.GetFaceNeighboursXY();
+                        foreach (var neighbour in neighbours)
+                        {
+                            if (neighbour.VoxelFunction == start.VoxelFunction && voxelsToCheck.Contains(neighbour) && !newVoxels.Contains(neighbour))
+                            {
+                                foundNewVoxels = true;
+                                newVoxels.Add(neighbour);
+                                voxelsToCheck.Remove(neighbour);
+                            }
+                        }
+                    }
+                    bfsStepVoxels.Add(newVoxels);
+                }
+
+                //roomVoxels = bfsStepVoxels.SelectMany(l => l.Select(v => v)).ToList();
+
+                //_connections.Add(new Room(roomVoxels));
+            }
+
        
+        
+
 
     }
 
@@ -331,7 +377,7 @@ public class EnvironmentManager : MonoBehaviour
 
     
 
-    void BFS (Vector3 Source, Vector3 End, Function function)
+    /*void BFS (Vector3 Source, Vector3 End, Function function)
     {
         Queue<Vector3> queue = new Queue<Vector3>();
         HashSet<Vector3> filledVoxels = new HashSet<Vector3>();
@@ -346,7 +392,7 @@ public class EnvironmentManager : MonoBehaviour
             }
         }
         
-    }
+    }*/
 
 
     #endregion

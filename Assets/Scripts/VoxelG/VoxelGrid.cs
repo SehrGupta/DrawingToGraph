@@ -19,11 +19,15 @@ public class VoxelGrid
     public Edge[][,,] Edges = new Edge[3][,,];
     public Vector3 Origin;
     public Vector3 Corner;
+
+
+
+    //public int resolution;
     public float VoxelSize { get; private set; }
 
     public Dictionary<Function, Material> FunctionColors;
 
-
+    
 
     #endregion
 
@@ -38,7 +42,7 @@ public class VoxelGrid
     /// <param name="voxelSize">The size of each <see cref="Voxel"/></param>
     public VoxelGrid(Vector3Int size, Vector3 origin, float voxelSize, Transform parent = null)
     {
-
+        
         GridSize = size;
         Origin = origin;
         VoxelSize = voxelSize;
@@ -372,8 +376,7 @@ public class VoxelGrid
         //FillBucket (origin, Function.LivingRoom);
         //FillBucket (origin, Function.Closet);
         //FillBucket (origin, Function.Courtyard);
-        //Debug.Log("FillBucket");
-        //Coroutine here!
+       
     }
 
     /*IEnumerator FillBucket()
@@ -423,19 +426,7 @@ public class VoxelGrid
     #endregion
 }
 
-/// <summary>
-/// Color coded values
-/// </summary>
-/*public enum FunctionColor
-{
-    Empty = -1,
-    Black = 0,
-    Red = 1,
-    Yellow = 2,
-    Green = 3,
-    Cyan = 4,
-    Magenta = 5
-}*/
+
 
 public enum Function
 {

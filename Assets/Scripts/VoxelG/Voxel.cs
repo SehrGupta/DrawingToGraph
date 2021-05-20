@@ -10,10 +10,15 @@ public class Voxel : IEquatable<Voxel>
 
     public Vector3Int Index;
     public List<Face> Faces = new List<Face>(6);
-    public Vector3 Center => (Index + _voxelGrid.Origin) * _size;
+    public Vector3 Center => (Index + _voxelGrid.Origin) * _size *0.5f;
     public bool IsActive;
     
     public Room InRoom;
+    public int resolution;
+
+    //public VoxelSize voxelSize;
+    //Vector3 voxelScale = Vector3.one * _size;
+    public float VoxelSize { get; private set; }
 
     //public FunctionColor FColor;
     public Function VoxelFunction
@@ -40,9 +45,32 @@ public class Voxel : IEquatable<Voxel>
 
     public VoxelGrid _voxelGrid;             // changes, fix to protected
     protected float _size;
+    //public float _size = 2f;
+
+    public Voxel Voxels;
+    public int voxelResolution = 8;
 
     #endregion
 
+    private void Awake()
+    {
+        VoxelSize = 1f / resolution;
+
+    }
+    /*public void Initialize(int resolution, float size)
+    {
+        this.resolution = resolution;
+        VoxelSize = size / resolution;
+        //Voxels = new bool[resolution * resolution];
+
+        for (int i = 0, y = 0; y < resolution; y++)
+        {
+            for (int x = 0; x < resolution; x++, i++)
+            {
+                CreateVoxel(i, x, y);
+            }
+        }
+    }*/
     #region Contructors
 
     /// <summary>
@@ -53,6 +81,7 @@ public class Voxel : IEquatable<Voxel>
     /// <param name="voxelGameObject">The <see cref="GameObject"/> used on the Voxel</param>
     public Voxel(Vector3Int index, VoxelGrid voxelGrid, bool createCollider = false, Transform parent = null)
     {
+        
         Index = index;
         _voxelGrid = voxelGrid;
         _size = _voxelGrid.VoxelSize;
@@ -64,10 +93,14 @@ public class Voxel : IEquatable<Voxel>
         {
             var colliderPrefab = Resources.Load<GameObject>("Prefabs/VoxelCollider");
             VoxelCollider = GameObject.Instantiate(colliderPrefab, parent, true);
-            VoxelCollider.transform.localPosition = new Vector3(Index.x, Index.y, Index.z) * _size;
+            VoxelCollider.transform.localPosition = new Vector3(Index.x , Index.y , Index.z) * _size;
+            
             VoxelCollider.transform.localScale = Vector3.one * _size;
             VoxelCollider.name = $"{Index.x}_{Index.y}_{Index.z}";
             VoxelCollider.tag = "Voxel";
+            
+           
+            
         }
 
         VoxelFunction = Function.Empty;
