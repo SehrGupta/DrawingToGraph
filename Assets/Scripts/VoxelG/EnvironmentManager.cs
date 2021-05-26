@@ -31,7 +31,7 @@ public class EnvironmentManager : MonoBehaviour
     {
         _selectedFunction = Function.Wall;
         // Initialise the voxel grid
-        Vector3Int gridSize = new Vector3Int(200, 125, 1);
+        Vector3Int gridSize = new Vector3Int(80, 40, 1);
  
         _voxelGrid = new VoxelGrid(gridSize, Vector3.zero, 2, parent: this.transform);
 
@@ -66,6 +66,7 @@ public class EnvironmentManager : MonoBehaviour
                 if (voxel != null)
                 {
                     voxel.VoxelFunction = _selectedFunction;
+                    //DrawWalls(voxel);
                 }
                 else
                 {
@@ -94,58 +95,8 @@ public class EnvironmentManager : MonoBehaviour
                 }
             }
 
-           
-
-            // If not, it means that you are creating a space
-            // So you should:
-            // Get the voxel
-            // Use the fill bucket from that voxel
-
-            //origin = new Vector3Int(Mathf.RoundToInt(v.x), (v.y), (v.z));
-            //VoxelGrid.FillBucket(origin, Vector3Int);
-            ///_voxelGrid.FillBucket(Voxels.Index, Function.Bathroom);
-            //_voxelGrid.FillBucket(Voxels.Index, Function.Bedroom);
-            //_voxelGrid.FillBucket(Voxels.Index, Function.Closet);
-            //_voxelGrid.FillBucket(Voxels.Index, Function.Dining);
-            // _voxelGrid.FillBucket(Voxels.Index, Function.Kitchen);
-            //_voxelGrid.FillBucket(Voxels.Index, _selectedFunction);  
         }
 
-        
-
-
-        /* void StartFillBucket()
-        {
-         StartCoroutine(FillBucket);
-        }*/
-
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    var voxel = SelectVoxel();
-        //    if (voxel != null)
-        //    {
-        //        if (_selectedFunction != Function.Wall &&
-        //        _selectedFunction != Function.SharableSpace &&
-        //        _selectedFunction != Function.Connector)
-        //        {
-        //            _voxelGrid.FillBucket(voxel.Index, _selectedFunction);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        SelectFunction();
-        //    }
-        //}
-        /*if (Input.GetMouseButtonDown(0))
-        {
-            var voxel = SelectVoxel();
-
-            if (voxel != null)
-            {
-                //print(voxel.Index);
-                _voxelGrid.CreateBlackBlob(voxel.Index, 6, picky: true, flat: true);
-            }
-        }*/
 
     }
     
@@ -161,6 +112,16 @@ public class EnvironmentManager : MonoBehaviour
             VoxelSize = newVoxelSize;
         }
         
+    }
+
+    private void DrawWalls(Voxel target)
+    {
+        var neighbours = target.GetFaceNeighbours();
+        target.VoxelFunction = _selectedFunction;
+        foreach (var neighbour in neighbours)
+        {
+            neighbour.VoxelFunction = _selectedFunction;
+        }
     }
 
     #endregion

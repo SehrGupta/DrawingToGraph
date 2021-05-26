@@ -2,18 +2,17 @@
 
 public class MainCamera : MonoBehaviour
 {
-    // Code copied from RC4_M3_C2
     //Copied from Vicente Soler https://github.com/ADRC4/Voxel/blob/master/Assets/Scripts/Util/MainCamera.cs
     Vector3 _target;
 
     void Start()
     {
-        _target = transform.position + transform.forward * 50;
+        _target = transform.position + transform.forward * 16;
     }
 
     void Update()
     {
-        //const float rotateSpeed = 4.0f;
+        const float rotateSpeed = 4.0f;
         const float panSpeed = 0.4f;
 
         bool pan = Input.GetAxis("Pan") == 1.0f;
@@ -28,14 +27,14 @@ public class MainCamera : MonoBehaviour
             transform.position += vector;
             _target += vector;
         }
-        /*else if (rotate)
-        {
-            float yaw = Input.GetAxis("Mouse X") * rotateSpeed;
-            float pitch = -Input.GetAxis("Mouse Y") * rotateSpeed;
+        //else if (rotate)
+        //{
+        //    float yaw = Input.GetAxis("Mouse X") * rotateSpeed;
+        //    float pitch = -Input.GetAxis("Mouse Y") * rotateSpeed;
 
-            transform.RotateAround(_target, Vector3.up, yaw);
-            transform.RotateAround(_target, transform.rotation * Vector3.right, pitch);
-        }*/
+        //    transform.RotateAround(_target, Vector3.up, yaw);
+        //    transform.RotateAround(_target, transform.rotation * Vector3.right, pitch);
+        //}
 
         float zoom = Input.GetAxis("Mouse ScrollWheel");
         if (zoom != 0)
