@@ -59,6 +59,7 @@ public class VoxelGrid
         { Function.Dining, Resources.Load<Material>("Material/Voxel/Dining") },
         { Function.Wall, Resources.Load<Material>("Material/Voxel/Wall") },
         { Function.SharableSpace, Resources.Load<Material>("Material/Voxel/SharableSpace") },
+        { Function.Eraser, Resources.Load<Material>("Material/Voxel/Eraser") },
         { Function.Connector, Resources.Load<Material>("Material/Voxel/Connector") }
 
 
@@ -440,5 +441,6 @@ public enum Function
     Courtyard,
     Wall,
     SharableSpace,
+    Eraser,
     Connector
 }

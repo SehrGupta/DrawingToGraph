@@ -22,6 +22,7 @@ public class EnvironmentManager : MonoBehaviour
     private List<Room> _rooms;
     private List<Connection> _connections;
 
+    public float VoxelSize { get; private set; }
     #endregion
 
     #region Unity Standard Methods
@@ -57,6 +58,7 @@ public class EnvironmentManager : MonoBehaviour
             if(_selectedFunction == Function.Wall || 
                 _selectedFunction == Function.SharableSpace || 
                 _selectedFunction == Function.Connector ||
+                _selectedFunction == Function.Eraser ||
                 _selectedFunction == Function.Empty)
             {
                 // If it is a wall, private, shared or door, do this
@@ -79,6 +81,7 @@ public class EnvironmentManager : MonoBehaviour
                     if (_selectedFunction != Function.Wall &&
                     _selectedFunction != Function.SharableSpace &&
                     _selectedFunction != Function.Connector &&
+                    _selectedFunction != Function.Eraser &&
                     _selectedFunction != Function.Empty)
                     {
                         _voxelGrid.FillBucket(voxel, _selectedFunction);
@@ -146,6 +149,19 @@ public class EnvironmentManager : MonoBehaviour
 
     }
     
+    public void AdjustVoxelSize(float newVoxelSize)                      //For slider : voxel selection increase/decrease
+    {
+        var voxel = SelectVoxel();
+
+        if (_selectedFunction == Function.Wall ||
+                _selectedFunction == Function.SharableSpace ||
+                _selectedFunction == Function.Connector ||
+                _selectedFunction == Function.Eraser)
+        {
+            VoxelSize = newVoxelSize;
+        }
+        
+    }
 
     #endregion
 
@@ -220,6 +236,10 @@ public class EnvironmentManager : MonoBehaviour
             {
                 _selectedFunction = Function.SharableSpace;
             }
+            else if (objectHit.name == "Eraser")
+            {
+                _selectedFunction = Function.Eraser;
+            }
             else 
             {
                 _selectedFunction = Function.Connector;
@@ -273,6 +293,7 @@ public class EnvironmentManager : MonoBehaviour
         var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
         v.VoxelFunction != Function.Empty &&
         v.VoxelFunction != Function.Connector &&
+        v.VoxelFunction != Function.Eraser &&
         v.VoxelFunction != Function.SharableSpace).ToList();
 
         while (voxelsToCheck.Count > 0)
@@ -323,6 +344,7 @@ public class EnvironmentManager : MonoBehaviour
         var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
         v.VoxelFunction != Function.Empty &&
         v.VoxelFunction != Function.SharableSpace &&
+        v.VoxelFunction != Function.Eraser &&
         v.VoxelFunction == Function.Connector).ToList();
 
         
