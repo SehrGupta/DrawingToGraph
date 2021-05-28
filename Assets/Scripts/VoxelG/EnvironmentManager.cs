@@ -31,7 +31,7 @@ public class EnvironmentManager : MonoBehaviour
     {
         _selectedFunction = Function.Wall;
         // Initialise the voxel grid
-        Vector3Int gridSize = new Vector3Int(80, 40, 1);
+        Vector3Int gridSize = new Vector3Int(120, 80, 1);
  
         _voxelGrid = new VoxelGrid(gridSize, Vector3.zero, 2, parent: this.transform);
 
