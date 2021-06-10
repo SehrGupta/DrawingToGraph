@@ -213,17 +213,6 @@ public class EnvironmentManager : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             StartCoroutine ("FillBucket");
-            /* if (true)
-             {
-             _selectedFunction = Function.Bedroom;
-             _selectedFunction = Function.Bathroom;
-             _selectedFunction = Function.Kitchen;
-             _selectedFunction = Function.Dining;
-             _selectedFunction = Function.LivingRoom;
-             _selectedFunction = Function.Closet;
-             _selectedFunction = Function.Courtyard;
-             }*/
-            
         }
        
     }
@@ -244,7 +233,12 @@ public class EnvironmentManager : MonoBehaviour
     /// </summary>
 
 
-    
+    public void AnalyseDrawing()
+    {
+        AnalyseRooms();
+        AnalyseConnections();
+
+    }
 
     
     public void AnalyseRooms()
@@ -302,81 +296,63 @@ public class EnvironmentManager : MonoBehaviour
         _connections = new List<Connection>();
 
         // Find the voxels of type connection
-        var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
-        v.VoxelFunction != Function.Empty &&
-        v.VoxelFunction != Function.SharableSpace &&
-        v.VoxelFunction != Function.Eraser &&
+        var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v => 
         v.VoxelFunction == Function.Connector).ToList();
 
-        
-        
-            // Get the voxels that make up this connector
-            // Get the neighbours of the connector
-            // Find out which rooms the neighbours belong to
-            // Store in the rooms their neighbouring rooms
-            while (voxelsToCheck.Count > 0)
+        // Get the voxels that make up this connector
+        // Get the neighbours of the connector
+
+        while (voxelsToCheck.Count > 0)
+        {
+            var start = voxelsToCheck[0];
+            List<Voxel> connectionVoxels = new List<Voxel>();
+            connectionVoxels.Add(start);
+            List<List<Voxel>> bfsStepVoxels = new List<List<Voxel>>();
+            bfsStepVoxels.Add(connectionVoxels);
+
+            bool foundNewVoxels = true;
+            while (foundNewVoxels)
             {
-                var start = voxelsToCheck[0];
-                List<Voxel> connectionVoxels = new List<Voxel>();
-                connectionVoxels.Add(start);
+                foundNewVoxels = false;
 
-                List<List<Voxel>> bfsStepVoxels = new List<List<Voxel>>();
-                bfsStepVoxels.Add(connectionVoxels);
-
-                bool foundNewVoxels = true;
-                while (foundNewVoxels)
+                List<Voxel> newVoxels = new List<Voxel>();
+                foreach (var voxel in bfsStepVoxels.Last())
                 {
-                    foundNewVoxels = false;
-
-                    List<Voxel> newVoxels = new List<Voxel>();
-                    foreach (var voxel in bfsStepVoxels.Last())
+                    var neighbours = voxel.GetFaceNeighboursXY();
+                    foreach (var neighbour in neighbours)
                     {
-                        var neighbours = voxel.GetFaceNeighboursXY();
-                        foreach (var neighbour in neighbours)
+                        if (neighbour.VoxelFunction == start.VoxelFunction && voxelsToCheck.Contains(neighbour) && !newVoxels.Contains(neighbour))
                         {
-                            if (neighbour.VoxelFunction == start.VoxelFunction && voxelsToCheck.Contains(neighbour) && !newVoxels.Contains(neighbour))
-                            {
-                                foundNewVoxels = true;
-                                newVoxels.Add(neighbour);
-                                voxelsToCheck.Remove(neighbour);
-                            }
+                            foundNewVoxels = true;
+                            newVoxels.Add(neighbour);
+                            voxelsToCheck.Remove(neighbour);
                         }
                     }
-                    bfsStepVoxels.Add(newVoxels);
                 }
-
-                //roomVoxels = bfsStepVoxels.SelectMany(l => l.Select(v => v)).ToList();
-
-                //_connections.Add(new Room(roomVoxels));
+                bfsStepVoxels.Add(newVoxels);
             }
 
-       
-        
+            connectionVoxels = bfsStepVoxels.SelectMany(l => l.Select(v => v)).ToList();
+
+            // Find out which rooms the neighbours belong to
+            // Store in the rooms their neighbouring rooms
+            /*foreach (var connectionVoxel in connectionVoxels)
+            {
+                
+                foreach (var voxel in _room.Voxels)
+                {
+                    if (connectionVoxel.InRoom == voxel.InRoom)
+                    {
+                        Debug.Log($"Found connection for voxel {connectionVoxel}");
+                    }
+                }
+                
+            }*/
+
+        }
+
 
 
     }
-
-    
-
-    
-
-    /*void BFS (Vector3 Source, Vector3 End, Function function)
-    {
-        Queue<Vector3> queue = new Queue<Vector3>();
-        HashSet<Vector3> filledVoxels = new HashSet<Vector3>();
-        queue.Enqueue(Source);
-
-        while (queue.Count != 0)
-        {
-            Vector3 Function = queue.Dequeue();
-            if(Function == End)
-            {
-                //return function;
-            }
-        }
-        
-    }*/
-
-
     #endregion
 }

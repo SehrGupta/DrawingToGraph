@@ -57,20 +57,7 @@ public class Voxel : IEquatable<Voxel>
         VoxelSize = 1f / resolution;
 
     }
-    /*public void Initialize(int resolution, float size)
-    {
-        this.resolution = resolution;
-        VoxelSize = size / resolution;
-        //Voxels = new bool[resolution * resolution];
-
-        for (int i = 0, y = 0; y < resolution; y++)
-        {
-            for (int x = 0; x < resolution; x++, i++)
-            {
-                CreateVoxel(i, x, y);
-            }
-        }
-    }*/
+   
     #region Contructors
 
     /// <summary>

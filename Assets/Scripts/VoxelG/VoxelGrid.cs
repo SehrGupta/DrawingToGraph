@@ -263,50 +263,6 @@ public class VoxelGrid
     #region Public Methods
 
     /// <summary>
-    /// Tries to create a black rectangle from the
-    /// specified origin and with the specified size
-    /// </summary>
-    /// <param name="origin">The index of the origin</param>
-    /// <param name="width">The width of the rectangle, in X</param>
-    /// <param name="depth">The depth of the rectangle, in Z</param>
-    /// <param name="layer">The layer to draw in, default is 0</param>
-    /// <returns>If the process was successful</returns>
-    /*public bool CreateBlackRectangle(Vector3Int origin, int width, int depth, int layer = 0)
-    {
-        FunctionColor fcolor = FunctionColor.Black;
-
-        int oX = origin.x;
-        int oZ = origin.z;
-
-        List<Voxel> recVoxels = new List<Voxel>();
-
-        for (int x = oX; x < oX + width; x++)
-        {
-            for (int z = oZ; z < oZ + depth; z++)
-            {
-                Vector3Int idx = new Vector3Int(x, 0, z);
-                if (Util.ValidateIndex(GridSize, idx))
-                {
-                    var voxel = Voxels[x, layer, z];
-                    if (voxel.FColor == FunctionColor.Empty)
-                    {
-                        recVoxels.Add(voxel);
-                    }
-                    else return false;
-                }
-                else return false;
-            }
-        }
-
-        foreach (var voxel in recVoxels)
-        {
-            voxel.FColor = fcolor;
-        }
-
-        return true;
-    }*/
-
-    /// <summary>
     /// Tries to create a black blob from the
     /// specified origin and with the specified size
     /// </summary>
@@ -367,56 +323,8 @@ public class VoxelGrid
             voxel.VoxelFunction = function;
         }
         
-
-
-        //origin = new Vector3Int(Mathf.RoundToInt(v.x), (v.y), (v.z));
-        //FillBucket (origin, Function.Bathroom);
-        //FillBucket (origin, Function.Kitchen);
-        //FillBucket (origin, Function.Bedroom);
-        //FillBucket (origin, Function.Dining);
-        //FillBucket (origin, Function.LivingRoom);
-        //FillBucket (origin, Function.Closet);
-        //FillBucket (origin, Function.Courtyard);
        
     }
-
-    /*IEnumerator FillBucket()
-    {
-        WaitForSeconds wait = new WaitForSeconds(0.05f);
-    }
-
-    public void StartFillBucket()
-    {
-        StartCoroutine(FillBucket);
-    }*/
-
-
-
-
-    /// <summary>
-    /// Reads an image pixel data and set the red pixels to the grid
-    /// </summary>
-    /// <param name="image">The reference image</param>
-    /// <param name="layer">The target layer</param>
-    /*public void SetStatesFromImage(Texture2D image, int layer = 0)
-    {
-        // Iterate through the XY plane
-        for (int x = 0; x < GridSize.x; x++)
-        {
-            for (int y = 0; y < GridSize.y; y++)
-            {
-                // Get the pixel color from the image
-                var pixel = image.GetPixel(x, y);
-
-                // Check if pixel is red
-                if (pixel.r >pixel.g)
-                {
-                    // Set respective color to voxel
-                    Voxels[x, y, layer].FColor = FunctionColor.Red;
-                }
-            }
-        }
-    }*/
 
 
     public IEnumerable<Voxel> GetFlattenedVoxels()
