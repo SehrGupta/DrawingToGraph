@@ -46,7 +46,7 @@ public class HouseNode
     #region Constructor
     public HouseNode(float radius, Function Function, Vector3 location)
     {
-        var nodePrefab = Resources.Load("Prefabs/Node") as GameObject;
+        var nodePrefab = Resources.Load("Prefabs/GONode") as GameObject;
         GONode = GameObject.Instantiate(nodePrefab, location, Quaternion.identity);
         GONode.transform.localScale = Vector3.one * radius;
     }
