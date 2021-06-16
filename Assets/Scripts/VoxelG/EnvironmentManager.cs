@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using System.Diagnostics;
+using UnityEngine.SceneManagement;
 using System.IO;
 using System.Linq;
 
@@ -325,7 +325,7 @@ public class EnvironmentManager : MonoBehaviour
 
             roomVoxels = bfsStepVoxels.SelectMany(l => l.Select(v => v)).ToList();
 
-            _rooms.Add(new Room(roomVoxels));
+            _rooms.Add(new Room(roomVoxels, _selectedFunction));
 
         }
         Debug.Log($"Found {_rooms.Count} rooms");
@@ -410,5 +410,24 @@ public class EnvironmentManager : MonoBehaviour
         //return new List<Connection>();
 
     }
+    #endregion
+
+    #region Public Methods
+
+    public void SaveAndReturn()
+    {
+        JsonExportImport.SaveScene(_voxelGrid, _rooms);
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void LoadFromFile(int level)
+    {
+        var scenes = JsonExportImport.LoadScenes();
+        var scene = scenes.First(s => s.Level == level);
+        Debug.Log(scene.JsonVoxels[0].Index);
+        Debug.Log(scene.JsonVoxels[0].VoxelFunction);
+        _voxelGrid.SetGridFromSaved(scene);
+    }
+
     #endregion
 }

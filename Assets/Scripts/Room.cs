@@ -12,7 +12,7 @@ public class Room : MonoBehaviour
     public List<Room> Neighbours;
     public GameObject GONode;
     private Vector3 scaleChange, positionChange;
-    private Function _selectedFunction;
+    public Function SelectedFunction { get; private set; }
     VoxelGrid _voxelGrid;
 
 
@@ -21,9 +21,10 @@ public class Room : MonoBehaviour
     {
         GONode = Resources.Load<GameObject>("Prefabs/GONode") ;
     }
-    public Room(List<Voxel> voxels)
+    public Room(List<Voxel> voxels, Function function)
     {
         Voxels = voxels;
+        SelectedFunction = function;
         foreach (var voxel in Voxels)
         {
             voxel.InRoom = this;
@@ -43,39 +44,39 @@ public class Room : MonoBehaviour
         //go.transform.position = CentrePoint + Voxels[0]._voxelGrid.Origin * Voxels[0]._voxelGrid.VoxelSize;
 
         ////Set minimum - maximum value for each function
-        if (GameObject.CreatePrimitive(PrimitiveType.Sphere))
-        {
-            GONode.transform.position = CentrePoint + Voxels[0]._voxelGrid.Origin * Voxels[0]._voxelGrid.VoxelSize;
+        //if (GameObject.CreatePrimitive(PrimitiveType.Sphere))
+        //{
+        //    GONode.transform.position = CentrePoint + Voxels[0]._voxelGrid.Origin * Voxels[0]._voxelGrid.VoxelSize;
 
-            if(_selectedFunction == Function.Bathroom)
-            {
-                scaleChange = new Vector3(1.5f, 2.4f, 1.5f);                     // convert to range
-            }
-            else if (_selectedFunction == Function.Bedroom)
-            {
-                scaleChange = new Vector3(4, 3, 4);
-            }
-            else if (_selectedFunction == Function.Closet)
-            {
-                scaleChange = new Vector3(2, 2, 2);
-            }
-            else if (_selectedFunction == Function.Dining)
-            {
-                scaleChange = new Vector3(2.5f, 3, 2.5f);
-            }
-            else if (_selectedFunction == Function.LivingRoom)
-            {
-                scaleChange = new Vector3(3.7f, 5.5f, 3.7f);
-            }
-            else if (_selectedFunction == Function.Kitchen)
-            {
-                scaleChange = new Vector3(3.4f, 3, 3.4f);
-            }
-            else 
-            {
-                scaleChange = new Vector3(5, 5, 5);
-            }
-        }
+        //    if(SelectedFunction == Function.Bathroom)
+        //    {
+        //        scaleChange = new Vector3(1.5f, 2.4f, 1.5f);                     // convert to range
+        //    }
+        //    else if (SelectedFunction == Function.Bedroom)
+        //    {
+        //        scaleChange = new Vector3(4, 3, 4);
+        //    }
+        //    else if (SelectedFunction == Function.Closet)
+        //    {
+        //        scaleChange = new Vector3(2, 2, 2);
+        //    }
+        //    else if (SelectedFunction == Function.Dining)
+        //    {
+        //        scaleChange = new Vector3(2.5f, 3, 2.5f);
+        //    }
+        //    else if (SelectedFunction == Function.LivingRoom)
+        //    {
+        //        scaleChange = new Vector3(3.7f, 5.5f, 3.7f);
+        //    }
+        //    else if (SelectedFunction == Function.Kitchen)
+        //    {
+        //        scaleChange = new Vector3(3.4f, 3, 3.4f);
+        //    }
+        //    else 
+        //    {
+        //        scaleChange = new Vector3(5, 5, 5);
+        //    }
+        //}
         
 
     }
@@ -91,7 +92,11 @@ public class Room : MonoBehaviour
         ///assign percentage to space based on its minimum - maximum value based on scale by user
     }
 
-
+    public void SetRoomsFromSaved(JsonScene scene)
+    {
+        // Get the voxels indexes from the saved scene
+        // set the according voxels to be part of a room
+    }
     
 
     #endregion

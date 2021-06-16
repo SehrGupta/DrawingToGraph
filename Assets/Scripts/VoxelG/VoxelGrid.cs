@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 // Code referenced from RC4_M3_C2
 public class VoxelGrid
@@ -331,6 +332,17 @@ public class VoxelGrid
     public IEnumerable<Voxel> GetFlattenedVoxels()
     {
         foreach (var voxel in Voxels) yield return voxel;
+    }
+
+    public void SetGridFromSaved(JsonScene scene)
+    {
+        foreach (var jvoxel in scene.JsonVoxels)
+        {
+            var index = jvoxel.Index;
+            var voxel = Voxels[index.x, index.y, index.z];
+            voxel.IsActive = jvoxel.IsActive;
+            voxel.VoxelFunction = (Function)Enum.Parse(typeof(Function), jvoxel.VoxelFunction);
+        }
     }
 
     #endregion
