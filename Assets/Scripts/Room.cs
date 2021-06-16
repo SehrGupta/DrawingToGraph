@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Room
+public class Room : MonoBehaviour
 {
     public Function RoomFunction;
     public Vector3 CentrePoint;
@@ -16,7 +16,10 @@ public class Room
 
 
     #region Constructor
-
+    public void Start()
+    {
+        GONode = Resources.Load<GameObject>("Material/Drawing/GONode") ;
+    }
     public Room(List<Voxel> voxels)
     {
         Voxels = voxels;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 // Code referenced from RC4_M3_C2
@@ -10,17 +11,20 @@ public class EnvironmentManager : MonoBehaviour
     #region Fields and properties
     //public Voxel Voxels;
     VoxelGrid _voxelGrid;
+    Connection _connection;
     public Vector3Int v;
     //public new Vector3Int origin;
     private Vector3Int origin;
     int _randomSeed = 666;
     public List<Voxel> filledVoxels;
     bool _showVoids = true;
-
+    Room _room;
     private Function _selectedFunction;
 
     private List<Room> _rooms;
     private List<Connection> _connections;
+    public Room Source;
+    public Room End;
 
     public float VoxelSize { get; private set; }
     #endregion
@@ -37,6 +41,8 @@ public class EnvironmentManager : MonoBehaviour
 
         // Set the random engine's seed
         Random.InitState(_randomSeed);
+
+          
         
     }
     
@@ -232,12 +238,46 @@ public class EnvironmentManager : MonoBehaviour
     /// Draws the voxels according to it's state and Function Corlor
     /// </summary>
 
+    public void Thumbnail()
+    {
+        IEnumerator TakeScreenshot()
+        {
+            yield return new WaitForEndOfFrame();
 
+            // create a texture to pass to encoding
+            Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+
+            // put buffer into texture
+            texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+
+            yield return 0;
+
+            texture.Apply();
+
+            yield return 0;
+
+            byte[] bytes = texture.EncodeToPNG();
+
+            ////// save the image
+            /*Sprite itemBGSprite = Resources.Load<Sprite>("Material/Screenshots");
+            Texture2D itemBGTex = itemBGSprite.texture;
+            byte[] itemBGBytes = itemBGTex.EncodeToPNG();*/
+            //File.WriteAllBytes(formattedCampaignPath + "Material/Screenshots.png", itemBGBytes);
+
+
+            string Resources = "drawing.png";
+            File.WriteAllBytes(Resources, bytes);
+            //Resources.UnloadAsset<Material>("Material/Screenshots");
+            //WriteAllBytes(imagePath, bytes);
+
+            DontDestroyOnLoad(transform.gameObject);
+        }
+    }
+    
     public void AnalyseDrawing()
     {
         AnalyseRooms();
         AnalyseConnections();
-
     }
 
     
@@ -348,10 +388,26 @@ public class EnvironmentManager : MonoBehaviour
                 }
                 
             }*/
+            var roomsToCheck = _room.Voxels.Where(v => v.VoxelFunction == Function.Connector).ToList();
+                
+                //(_connection.Source && _connection.End => Function.Connector).ToList();
+            foreach ( var neighbour in _rooms)
+            {
+                if (neighbour.RoomFunction  == Function.Connector)
+                {
+                    foundNewVoxels = true;
+                    _rooms.Add(neighbour);
+                   // roomsToCheck.Remove();
+                }
 
+                _rooms.Insert(1, _connection.Source);
+                _rooms.Insert(2, _connection.End);
+            }
+
+            
         }
 
-
+        //return new List<Connection>();
 
     }
     #endregion
