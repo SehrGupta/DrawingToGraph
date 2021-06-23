@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using UnityEngine;
 
 public class Room : MonoBehaviour
@@ -14,6 +15,7 @@ public class Room : MonoBehaviour
     private Vector3 scaleChange, positionChange;
     public Function SelectedFunction { get; private set; }
     VoxelGrid _voxelGrid;
+   
 
 
     #region Constructor
@@ -96,6 +98,13 @@ public class Room : MonoBehaviour
     {
         // Get the voxels indexes from the saved scene
         // set the according voxels to be part of a room
+        foreach (var jvoxel in scene.JsonVoxels)
+        {
+            var index = jvoxel.Index;
+            var voxel = _voxelGrid.Voxels[index.x, index.y, index.z];
+            voxel.IsActive = jvoxel.IsActive;
+            voxel.InRoom = (Room)Enum.Parse(typeof(Room), jvoxel.VoxelFunction);
+        }
     }
     
 
