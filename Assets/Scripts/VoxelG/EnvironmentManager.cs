@@ -429,5 +429,6 @@ public class EnvironmentManager : MonoBehaviour
         _voxelGrid.SetGridFromSaved(scene);
     }
 
+
     #endregion
 }
