@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using UnityEngine;
 
-public class Room : MonoBehaviour
+public class Room 
 {
     public Function RoomFunction;
     public Vector3 CentrePoint;
@@ -15,23 +15,17 @@ public class Room : MonoBehaviour
     private Vector3 scaleChange, positionChange;
     public Function SelectedFunction { get; private set; }
     VoxelGrid _voxelGrid;
-   
+
 
 
     #region Constructor
-    public void Start()
-    {
-        GONode = Resources.Load<GameObject>("Prefabs/GONode") ;
-    }
+
     public Room(List<Voxel> voxels, Function function)
     {
         Voxels = voxels;
         SelectedFunction = function;
-        foreach (var voxel in Voxels)
-        {
-            voxel.InRoom = this;
 
-        }
+        GONode = Resources.Load<GameObject>("Prefabs/GONode");
 
         float avgX = (float)voxels.Average(v => v.Index.x);
         float avgY = (float)voxels.Average(v => v.Index.y);
@@ -79,20 +73,18 @@ public class Room : MonoBehaviour
         //        scaleChange = new Vector3(5, 5, 5);
         //    }
         //}
-        
+
 
     }
 
-    public void Awake()
+    public void AddRoomToVoxels()
     {
-        
+        foreach (var voxel in Voxels)
+        {
+            voxel.InRoom = this;
+        }
     }
 
-    public void Update()
-    {
-        ////Take percentage from scale of space drawn by user
-        ///assign percentage to space based on its minimum - maximum value based on scale by user
-    }
 
     public void SetRoomsFromSaved(JsonScene scene)
     {
@@ -106,7 +98,7 @@ public class Room : MonoBehaviour
             voxel.InRoom = (Room)Enum.Parse(typeof(Room), jvoxel.VoxelFunction);
         }
     }
-    
+
 
     #endregion
 }

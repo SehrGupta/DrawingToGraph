@@ -10,7 +10,9 @@ public class EnvironmentManager : MonoBehaviour
 {
     #region Fields and properties
     //public Voxel Voxels;
-    VoxelGrid _voxelGrid;
+    VoxelGrid[] _gridLevels;
+    int _currentLevel = 0;
+    //VoxelGrid _gridLevels[_currentLevel];
     Connection _connection;
     public Vector3Int v;
     //public new Vector3Int origin;
@@ -36,16 +38,20 @@ public class EnvironmentManager : MonoBehaviour
         _selectedFunction = Function.Wall;
         // Initialise the voxel grid
         Vector3Int gridSize = new Vector3Int(120, 80, 1);
- 
-        _voxelGrid = new VoxelGrid(gridSize, Vector3.zero, 2, parent: this.transform);
+
+        for (int i = 0; i < _gridLevels.Length; i++)
+        {
+            _gridLevels[i] = new VoxelGrid(gridSize, Vector3.zero, 2, parent: this.transform);
+        }
+
 
         // Set the random engine's seed
         Random.InitState(_randomSeed);
 
-          
-        
+
+
     }
-    
+
     void Update()
     {
         // Draw the voxels according to their Function Colors
@@ -61,8 +67,8 @@ public class EnvironmentManager : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             // Check if you are drawing a wall or a space
-            if(_selectedFunction == Function.Wall || 
-                _selectedFunction == Function.SharableSpace || 
+            if (_selectedFunction == Function.Wall ||
+                _selectedFunction == Function.SharableSpace ||
                 _selectedFunction == Function.Connector ||
                 _selectedFunction == Function.Eraser ||
                 _selectedFunction == Function.Empty)
@@ -91,13 +97,13 @@ public class EnvironmentManager : MonoBehaviour
                     _selectedFunction != Function.Eraser &&
                     _selectedFunction != Function.Empty)
                     {
-                        _voxelGrid.FillBucket(voxel, _selectedFunction);
+                        _gridLevels[_currentLevel].FillBucket(voxel, _selectedFunction);
                     }
                 }
                 else
                 {
-                     SelectFunction();
-                   
+                    SelectFunction();
+
                 }
             }
 
@@ -105,7 +111,7 @@ public class EnvironmentManager : MonoBehaviour
 
 
     }
-    
+
     public void AdjustVoxelSize(float newVoxelSize)                      //For slider : voxel selection increase/decrease
     {
         var voxel = SelectVoxel();
@@ -117,7 +123,7 @@ public class EnvironmentManager : MonoBehaviour
         {
             VoxelSize = newVoxelSize;
         }
-        
+
     }
 
     private void DrawWalls(Voxel target)
@@ -148,15 +154,15 @@ public class EnvironmentManager : MonoBehaviour
                 string voxelName = objectHit.name;
                 var index = voxelName.Split('_').Select(v => int.Parse(v)).ToArray();
 
-                selected = _voxelGrid.Voxels[index[0], index[1], index[2]];
+                selected = _gridLevels[_currentLevel].Voxels[index[0], index[1], index[2]];
             }
-            
+
         }
         return selected;
-        
+
     }
 
-    
+
 
 
     void SelectFunction()
@@ -207,20 +213,20 @@ public class EnvironmentManager : MonoBehaviour
             {
                 _selectedFunction = Function.Eraser;
             }
-            else 
+            else
             {
                 _selectedFunction = Function.Connector;
             }
-            
+
             Debug.Log($"Current function is {_selectedFunction}");
-            
+
         }
         //Coroutine
         if (Input.GetMouseButton(0))
         {
-            StartCoroutine ("FillBucket");
+            StartCoroutine("FillBucket");
         }
-       
+
     }
     IEnumerator FillBucket()
     {
@@ -230,7 +236,7 @@ public class EnvironmentManager : MonoBehaviour
         }
         yield return false;
 
-       // Debug.Log("FillBucket");
+        // Debug.Log("FillBucket");
 
     }
 
@@ -273,19 +279,19 @@ public class EnvironmentManager : MonoBehaviour
             DontDestroyOnLoad(transform.gameObject);
         }
     }
-    
+
     public void AnalyseDrawing()
     {
         AnalyseRooms();
         AnalyseConnections();
     }
 
-    
+
     public void AnalyseRooms()
     {
         _rooms = new List<Room>();
 
-        var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
+        var voxelsToCheck = _gridLevels[_currentLevel].GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
         v.VoxelFunction != Function.Empty &&
         v.VoxelFunction != Function.Connector &&
         v.VoxelFunction != Function.Eraser &&
@@ -299,7 +305,7 @@ public class EnvironmentManager : MonoBehaviour
 
             List<List<Voxel>> bfsStepVoxels = new List<List<Voxel>>();
             bfsStepVoxels.Add(roomVoxels);
-            
+
 
             bool foundNewVoxels = true;
             while (foundNewVoxels)
@@ -326,6 +332,7 @@ public class EnvironmentManager : MonoBehaviour
             roomVoxels = bfsStepVoxels.SelectMany(l => l.Select(v => v)).ToList();
 
             _rooms.Add(new Room(roomVoxels, _selectedFunction));
+            _rooms.Last().AddRoomToVoxels();
 
         }
         Debug.Log($"Found {_rooms.Count} rooms");
@@ -336,7 +343,7 @@ public class EnvironmentManager : MonoBehaviour
         _connections = new List<Connection>();
 
         // Find the voxels of type connection
-        var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v => 
+        var voxelsToCheck = _gridLevels[_currentLevel].GetFlattenedVoxels().Where(v =>
         v.VoxelFunction == Function.Connector).ToList();
 
         // Get the voxels that make up this connector
@@ -361,7 +368,7 @@ public class EnvironmentManager : MonoBehaviour
                     var neighbours = voxel.GetFaceNeighboursXY();
                     foreach (var neighbour in neighbours)
                     {
-                        if (neighbour.VoxelFunction == start.VoxelFunction && voxelsToCheck.Contains(neighbour) && !newVoxels.Contains(neighbour))
+                        if (voxelsToCheck.Contains(neighbour) && !newVoxels.Contains(neighbour))
                         {
                             foundNewVoxels = true;
                             newVoxels.Add(neighbour);
@@ -373,6 +380,25 @@ public class EnvironmentManager : MonoBehaviour
             }
 
             connectionVoxels = bfsStepVoxels.SelectMany(l => l.Select(v => v)).ToList();
+
+
+            List<Room> connectedRooms = new List<Room>();
+            foreach (var voxel in connectionVoxels)
+            {
+                foreach (var neighbour in voxel.GetFaceNeighboursXY())
+                {
+                    if ((int)neighbour.VoxelFunction > 0)
+                    {
+                        connectedRooms.Add(neighbour.InRoom);
+                    }
+                }
+            }
+
+            connectedRooms = connectedRooms.Distinct().ToList();
+            Debug.Log($"{connectedRooms.Count} connected rooms found");
+            if (connectedRooms.Count >= 2)
+                _connections.Add(new Connection(connectedRooms[0], connectedRooms[1], connectionVoxels));
+
 
             // Find out which rooms the neighbours belong to
             // Store in the rooms their neighbouring rooms
@@ -387,24 +413,24 @@ public class EnvironmentManager : MonoBehaviour
                     }
                 }
                 
-            }*/
+            }
             var roomsToCheck = _room.Voxels.Where(v => v.VoxelFunction == Function.Connector).ToList();
-                
-                //(_connection.Source && _connection.End => Function.Connector).ToList();
-            foreach ( var neighbour in _rooms)
+
+            //(_connection.Source && _connection.End => Function.Connector).ToList();
+            foreach (var neighbour in _rooms)
             {
-                if (neighbour.RoomFunction  == Function.Connector)
+                if (neighbour.RoomFunction == Function.Connector)
                 {
                     foundNewVoxels = true;
                     _rooms.Add(neighbour);
-                   // roomsToCheck.Remove();
+                    // roomsToCheck.Remove();
                 }
 
                 _rooms.Insert(1, _connection.Source);
                 _rooms.Insert(2, _connection.End);
             }
 
-            
+            */
         }
 
         //return new List<Connection>();
@@ -416,7 +442,8 @@ public class EnvironmentManager : MonoBehaviour
 
     public void SaveAndReturn()
     {
-        JsonExportImport.SaveScene(_voxelGrid, _rooms);
+        AnalyseDrawing();
+        JsonExportImport.SaveScene(_gridLevels[_currentLevel], _rooms);
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -426,7 +453,7 @@ public class EnvironmentManager : MonoBehaviour
         var scene = scenes.First(s => s.Level == level);
         Debug.Log(scene.JsonVoxels[0].Index);
         Debug.Log(scene.JsonVoxels[0].VoxelFunction);
-        _voxelGrid.SetGridFromSaved(scene);
+        _gridLevels[_currentLevel].SetGridFromSaved(scene);
     }
 
 

@@ -28,6 +28,15 @@ public class VoxelGrid
 
     public Dictionary<Function, Material> FunctionColors;
 
+    public bool IsGridEmpty
+    {
+        get
+        {
+            if (GetVoxels().Count(v => v.VoxelFunction != Function.Wall) == 0) return false;
+            return true;
+        }
+    }
+
     
 
     #endregion
@@ -352,17 +361,17 @@ public class VoxelGrid
 
 public enum Function
 {
-    Empty,
-    Kitchen,
-    Bedroom,
-    Bathroom,
-    LivingRoom,
-    Closet,
-    Dining,
-    Courtyard,
-    Wall,
-    SharableSpace,
-    Eraser,
-    Connector,
-    Staircase
+    Empty = -1,
+    Kitchen = 1,
+    Bedroom = 2,
+    Bathroom = 3,
+    LivingRoom = 4,
+    Closet = 5,
+    Dining = 6,
+    Courtyard = 7,
+    Wall = -2,
+    SharableSpace = -3,
+    Eraser = -4,
+    Connector = -5,
+    Staircase = -6
 }
