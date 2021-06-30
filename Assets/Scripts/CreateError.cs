@@ -46,12 +46,8 @@ public class CreateError : MonoBehaviour
         if (SaveandReturn == true && MakeError.activeInHierarchy == false)
         {
             //allows button to be used
-            MakeError.active = true;
+            MakeError.SetActive(true);
         }
-    }
-    public void Update()
-    {
-        
     }
     /*public void Error()
     {

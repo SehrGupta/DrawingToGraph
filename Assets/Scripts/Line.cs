@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LineRenderer : MonoBehaviour
+public class Line
 {
-    private LineRenderer lineRenderer;
-    private float counter;
-    private float dist;
+    private LineRenderer _lineRenderer;
+    private float _counter;
+    private float _dist;
 
-    public Transform Source;
-    public Transform End;
+    public Vector3 Source;
+    public Vector3 End;
 
     public float lineDarwSpeed = 2f;
 
@@ -17,12 +17,12 @@ public class LineRenderer : MonoBehaviour
     void Start()
     {
         //Get component lineRenderer
-        lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.SetPosition(0, Source.position);
-        lineRenderer.SetWidth(0.45f, 0.45f);
+        //_lineRenderer = GetComponent<LineRenderer>();
+        //_lineRenderer.SetPosition(0, Source.position);
+        //_lineRenderer.SetWidth(0.45f, 0.45f);
 
         //Check distance between source to end to animate
-        dist = Vector3.Distance(Source.position, End.position);
+        //_dist = Vector3.Distance(Source.position, End.position);
     }
 
     // Update is called once per frame
@@ -31,21 +31,21 @@ public class LineRenderer : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if(counter <dist)
+        if (_counter < _dist)
         {
             //Adding to itself each frame
-            counter += 0.1f / lineDarwSpeed;
+            _counter += 0.1f / lineDarwSpeed;
 
-            float x = Mathf.Lerp(0, dist, counter);
+            float x = Mathf.Lerp(0, _dist, _counter);
 
-            Vector3 pointA = Source.position;
-            Vector3 pointB = End.position;
+            Vector3 pointA = Source;
+            Vector3 pointB = End;
 
             ////To calculate position on each point of line while animating
             ////Get unit vector in desired direction, multiply by the desired length and add the starting point
             Vector3 pointAlongLine = x * Vector3.Normalize(pointB - pointA) + pointA;
 
-            lineRenderer.SetPosition(1, pointAlongLine);
+            _lineRenderer.SetPosition(1, pointAlongLine);
         }
     }
 }

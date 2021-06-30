@@ -78,6 +78,10 @@ public class Room
 
     }
 
+    #endregion
+
+    #region Public Methods
+
     public void AddRoomToVoxels()
     {
         foreach (var voxel in Voxels)
@@ -87,18 +91,22 @@ public class Room
     }
 
 
-    public void SetRoomsFromSaved(JsonScene scene)
-    {
-        // Get the voxels indexes from the saved scene
-        // set the according voxels to be part of a room
-        foreach (var jvoxel in scene.JsonVoxels)
-        {
-            var index = jvoxel.Index;
-            var voxel = _voxelGrid.Voxels[index.x, index.y, index.z];
-            voxel.IsActive = jvoxel.IsActive;
-            voxel.InRoom = (Room)Enum.Parse(typeof(Room), jvoxel.VoxelFunction);
-        }
-    }
+    //public List<Room> SetRoomsFromSaved(JsonScene scene)
+    //{
+    //    // Get the voxels indexes from the saved scene
+    //    // set the according voxels to be part of a room
+    //    List<Room> result = new List<Room>();
+    //    foreach (var jvoxel in scene.JsonVoxels)
+    //    {
+    //        var index = jvoxel.Index;
+    //        var voxel = _voxelGrid.Voxels[index.x, index.y, index.z];
+    //        voxel.IsActive = jvoxel.IsActive;
+    //        var room = (Room)Enum.Parse(typeof(Room), jvoxel.VoxelFunction);
+    //        voxel.InRoom = room;
+    //        result.Add(room);
+    //    }
+    //    return result;
+    //}
 
 
     #endregion

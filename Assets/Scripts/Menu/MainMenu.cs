@@ -15,33 +15,39 @@ public class MainMenu : MonoBehaviour
     public GameObject CreateLevel2;
     public GameObject CreateLevel1;
 
-    
 
-    
+
+
     private void Start()
     {
-        
-        
+        var levelButtons = GameObject.Find("LevelButtons").transform;
 
-        /*LevelButtons = GetComponent<Button>();
-        LoadLevel1 = GetComponent<Button>();
-        LoadLevel2 = GetComponent<Button>();
-        LoadLevel3 = GetComponent<Button>();
-        CreateLevel1 = GetComponent<Button>();
-        CreateLevel2 = GetComponent<Button>();
-        CreateLevel3 = GetComponent<Button>();*/
-        
-        //LevelButtons.interactable = false;
+        var create1 = levelButtons.Find("CL1");
+        var create2 = levelButtons.Find("CL2");
+        var create3 = levelButtons.Find("CL3");
+        var load1 = levelButtons.Find("LL1");
+        var load2 = levelButtons.Find("LL2");
+        var load3 = levelButtons.Find("LL3");
+
+        create1.gameObject.SetActive(true);
+        load1.gameObject.SetActive(SessionManager.CreatedScenes.ContainsKey(1));
+
+        create2.gameObject.SetActive(SessionManager.CreatedScenes.ContainsKey(1));
+        load2.gameObject.SetActive(SessionManager.CreatedScenes.ContainsKey(2));
+
+        create3.gameObject.SetActive(SessionManager.CreatedScenes.ContainsKey(2));
+        load3.gameObject.SetActive(SessionManager.CreatedScenes.ContainsKey(3));
+
     }
 
-    
 
-    
+
+
     //Get and Update Buttons
 
     public void ButtonLevel1()
     {
-        
+
         if (LoadLevel1.activeInHierarchy == true)
         {
             LoadLevel1.SetActive(false);
@@ -54,8 +60,6 @@ public class MainMenu : MonoBehaviour
         }
         else CreateLevel2.SetActive(true);
     }
-
-
 
     public void ButtonLevel2()
     {
@@ -81,20 +85,25 @@ public class MainMenu : MonoBehaviour
         else LoadLevel3.SetActive(true);
     }
 
-public void Buttons()
-{
-    GetComponent<Button>().interactable = false;
-    //if (level > 1 && !previousCleared)
-    //{
-    ///    levelButton.interactable = false;
-   // }
-
-}
-
-
-
-    public void CreateNewScene()
+    public void Buttons()
     {
+        GetComponent<Button>().interactable = false;
+        //if (level > 1 && !previousCleared)
+        //{
+        ///    levelButton.interactable = false;
+        // }
+
+    }
+
+    public void LoadScene(int level)
+    {
+        SessionManager.CurrentLevel = level;
+        SceneManager.LoadScene("APP");
+    }
+
+    public void CreateNewScene(int level)
+    {
+        SessionManager.CurrentLevel = level;
         SceneManager.LoadScene("APP");
     }
 

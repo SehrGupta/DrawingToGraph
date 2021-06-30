@@ -37,7 +37,7 @@ public class VoxelGrid
         }
     }
 
-    
+
 
     #endregion
 
@@ -52,7 +52,7 @@ public class VoxelGrid
     /// <param name="voxelSize">The size of each <see cref="Voxel"/></param>
     public VoxelGrid(Vector3Int size, Vector3 origin, float voxelSize, Transform parent = null)
     {
-        
+
         GridSize = size;
         Origin = origin;
         VoxelSize = voxelSize;
@@ -97,10 +97,10 @@ public class VoxelGrid
         MakeFaces();
         MakeCorners();
         MakeEdges();
-        
+
     }
 
-    
+
 
 
 
@@ -245,10 +245,10 @@ public class VoxelGrid
                     yield return Corners[x, y, z];
                 }
     }
-    
-    
-    
-        /// <summary>
+
+
+
+    /// <summary>
     /// Get the Edges of the <see cref="VoxelGrid"/>
     /// </summary>
     /// <returns>All the edges</returns>
@@ -282,7 +282,7 @@ public class VoxelGrid
     /// <param name="picky">If the blob should skip voxels randomly as it expands</param>
     /// <param name="flat">If the blob should be located on the first layer or use all</param>
     /// <returns></returns>
-    
+
     public void FillBucket(Voxel origin, Function function)
     {
         // Create the list to store the blob voxels
@@ -315,7 +315,7 @@ public class VoxelGrid
                     }
                 }
             }
-            
+
             if (newVoxels.Count == 0)
             {
                 filled = true;
@@ -328,13 +328,13 @@ public class VoxelGrid
                 }
             }
         }
-        
+
         foreach (var voxel in filledVoxels)
         {
             voxel.VoxelFunction = function;
         }
-        
-       
+
+
     }
 
 
@@ -352,6 +352,23 @@ public class VoxelGrid
             voxel.IsActive = jvoxel.IsActive;
             voxel.VoxelFunction = (Function)Enum.Parse(typeof(Function), jvoxel.VoxelFunction);
         }
+    }
+
+    public List<Room> SetRoomsFromSaved(JsonScene scene)
+    {
+        // Get the voxels indexes from the saved scene
+        // set the according voxels to be part of a room
+        List<Room> result = new List<Room>();
+        foreach (var jvoxel in scene.JsonVoxels)
+        {
+            var index = jvoxel.Index;
+            var voxel = Voxels[index.x, index.y, index.z];
+            voxel.IsActive = jvoxel.IsActive;
+            var room = (Room)Enum.Parse(typeof(Room), jvoxel.VoxelFunction);
+            voxel.InRoom = room;
+            result.Add(room);
+        }
+        return result;
     }
 
     #endregion

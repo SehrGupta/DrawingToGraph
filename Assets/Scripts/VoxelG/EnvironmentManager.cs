@@ -24,6 +24,9 @@ public class EnvironmentManager : MonoBehaviour
     Room _room;
     private Function _selectedFunction;
 
+    [SerializeField]
+    private GameObject _errorWindow;
+
     private List<Room> _rooms;
     private List<Connection> _connections;
     public Room Source;
@@ -36,22 +39,34 @@ public class EnvironmentManager : MonoBehaviour
 
     void Start()
     {
+        
+        _errorWindow.SetActive(false);
         _selectedFunction = Function.Wall;
         // Initialise the voxel grid
         Vector3Int gridSize = new Vector3Int(120, 80, 1);
 
-        /*for (int i = 0; i < _gridLevels.Length; i++)
-        {
-            _gridLevels[i] = new VoxelGrid(gridSize, Vector3.zero, 2, parent: this.transform);
-        }*/
+        // Check which level you are working on
+        // check if the top and bottom levels have been create
+        // create a dummy voxelgrid for each of them, if they exist
+        // check for a staircase voxel in each one
+        // store the index of the stair voxel
+        // Delete the dummy voxel grids 
+        //// Destroy(Voxel.VoxelCollider)
 
         _voxelGrid = new VoxelGrid(gridSize, Vector3.zero, 2, parent: this.transform);
 
+        int level = SessionManager.CurrentLevel;
+        if (SessionManager.CreatedScenes.ContainsKey(level))
+        {
+            var scene = SessionManager.CreatedScenes[level];
+            _voxelGrid.SetGridFromSaved(scene);
+            _rooms = _voxelGrid.SetRoomsFromSaved(scene);
+        }
+
+        // Set the voxels of the staircase to _voxelGrid
 
         // Set the random engine's seed
         Random.InitState(_randomSeed);
-
-
 
     }
 
@@ -451,7 +466,9 @@ public class EnvironmentManager : MonoBehaviour
     {
         AnalyseDrawing();
         //JsonExportImport.SaveScene(_gridLevels[_currentLevel], _rooms);
-        JsonExportImport.SaveScene(_voxelGrid, _rooms);
+        //JsonExportImport.SaveScene(_voxelGrid, _rooms);
+        var scene = JsonExportImport.ConvertToJsonScene(_voxelGrid, _rooms);
+        SessionManager.AddScene(scene);
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -463,6 +480,29 @@ public class EnvironmentManager : MonoBehaviour
         Debug.Log(scene.JsonVoxels[0].VoxelFunction);
         //_gridLevels[_currentLevel].SetGridFromSaved(scene);
         _voxelGrid.SetGridFromSaved(scene);
+    }
+
+    public void FinishAndShowLines()
+    {
+        var parent = GameObject.Find("LineRenderers");
+        foreach (var connection in _connections)
+        {
+            var go = new GameObject();
+            go.transform.parent = parent.transform;
+            var renderer = go.AddComponent<LineRenderer>();
+            
+            renderer.positionCount = 2;
+            
+            Vector3 source = connection.Source.CentrePoint; // visualise the nodes
+            Vector3 end = connection.End.CentrePoint; // visualise the nodes
+            
+            renderer.SetPosition(0, source);
+            renderer.SetPosition(1, end);
+        }
+        // For every Connection (_connections), create an empty GO
+        // Creat a LineRenderer in that GO
+        // Add the GO to the LineRenderers game object
+        // Set the Connection source and end as the line renderer points
     }
 
 

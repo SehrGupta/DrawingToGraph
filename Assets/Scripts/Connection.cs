@@ -11,8 +11,8 @@ public class Connection
     public Connection(Room source, Room end, List<Voxel> voxels)
     {
         Voxels = voxels;
-        Source = Source;
-        End = End;
+        Source = source;
+        End = end;
         //float avgX = voxels.Average(voxels => voxels.Index.x);
         //float avgY = voxels.Average(voxels => voxels.Index.y);
         //float avgZ = voxels.Average(voxels => voxels.Index.z);

@@ -225,19 +225,28 @@ public class JsonRoom
 }
 
 
+[Serializable]
+public class JsonNode
+{
+    public Vector3 Centre;
+    public float Area;
 
+    public JsonNode(Room room)
+    {
+        Centre = room.CentrePoint;
+        Area = room.Area;
+    }
+}
 
-//[Serializable]
-//public class JsonBlock
-//{
-//    public Vector3Int Anchor;
-//    public Quaternion Rotation;
-//    public int BlockType;
+[Serializable]
+public class JsonConnection
+{
+    public JsonRoom Source;
+    public JsonRoom End;
 
-//    public JsonBlock(Vector3Int anchor, Quaternion rotation, int blockType)
-//    {
-//        Anchor = anchor;
-//        Rotation = rotation;
-//        BlockType = blockType;
-//    }
-//}
+    public JsonConnection(JsonRoom s, JsonRoom e)
+    {
+        Source = s;
+        End = e;
+    }
+}
