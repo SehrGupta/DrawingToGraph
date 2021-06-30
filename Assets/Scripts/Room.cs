@@ -15,7 +15,7 @@ public class Room
     private Vector3 scaleChange, positionChange;
     public Function SelectedFunction { get; private set; }
     VoxelGrid _voxelGrid;
-
+    
 
 
     #region Constructor
@@ -36,43 +36,44 @@ public class Room
         ////////Create Sphere at origin
         ////////Create Sphere(Node) for each function
         //var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        //var go = GameObject.Instantiate(GONode);
-        //go.transform.position = CentrePoint + Voxels[0]._voxelGrid.Origin * Voxels[0]._voxelGrid.VoxelSize;
+        var go = GameObject.Instantiate(GONode);
+        go.transform.position = CentrePoint + Voxels[0]._voxelGrid.Origin * Voxels[0]._voxelGrid.VoxelSize;
 
         ////Set minimum - maximum value for each function
-        //if (GameObject.CreatePrimitive(PrimitiveType.Sphere))
-        //{
-        //    GONode.transform.position = CentrePoint + Voxels[0]._voxelGrid.Origin * Voxels[0]._voxelGrid.VoxelSize;
+        if (function != Function.Connector && 
+             GameObject.Instantiate(GONode))
+        {
+            GONode.transform.position = CentrePoint + Voxels[0]._voxelGrid.Origin * Voxels[0]._voxelGrid.VoxelSize;
 
-        //    if(SelectedFunction == Function.Bathroom)
-        //    {
-        //        scaleChange = new Vector3(1.5f, 2.4f, 1.5f);                     // convert to range
-        //    }
-        //    else if (SelectedFunction == Function.Bedroom)
-        //    {
-        //        scaleChange = new Vector3(4, 3, 4);
-        //    }
-        //    else if (SelectedFunction == Function.Closet)
-        //    {
-        //        scaleChange = new Vector3(2, 2, 2);
-        //    }
-        //    else if (SelectedFunction == Function.Dining)
-        //    {
-        //        scaleChange = new Vector3(2.5f, 3, 2.5f);
-        //    }
-        //    else if (SelectedFunction == Function.LivingRoom)
-        //    {
-        //        scaleChange = new Vector3(3.7f, 5.5f, 3.7f);
-        //    }
-        //    else if (SelectedFunction == Function.Kitchen)
-        //    {
-        //        scaleChange = new Vector3(3.4f, 3, 3.4f);
-        //    }
-        //    else 
-        //    {
-        //        scaleChange = new Vector3(5, 5, 5);
-        //    }
-        //}
+            if(SelectedFunction == Function.Bathroom)
+            {
+                scaleChange = new Vector3(1.5f, 2.4f, 1.5f);                     // convert to range
+            }
+            else if (SelectedFunction == Function.Bedroom)
+            {
+                scaleChange = new Vector3(4, 3, 4);
+            }
+            else if (SelectedFunction == Function.Closet)
+            {
+                scaleChange = new Vector3(2, 2, 2);
+            }
+            else if (SelectedFunction == Function.Dining)
+            {
+                scaleChange = new Vector3(2.5f, 3, 2.5f);
+            }
+            else if (SelectedFunction == Function.LivingRoom)
+            {
+                scaleChange = new Vector3(3.7f, 5.5f, 3.7f);
+            }
+            else if (SelectedFunction == Function.Kitchen)
+            {
+                scaleChange = new Vector3(3.4f, 3, 3.4f);
+            }
+            else 
+            {
+                scaleChange = new Vector3(5, 5, 5);
+            }
+        }
 
 
     }

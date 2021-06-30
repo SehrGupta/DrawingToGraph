@@ -10,7 +10,8 @@ public class EnvironmentManager : MonoBehaviour
 {
     #region Fields and properties
     //public Voxel Voxels;
-    VoxelGrid[] _gridLevels;
+    //VoxelGrid[] _gridLevels;
+    VoxelGrid _voxelGrid;
     int _currentLevel = 0;
     //VoxelGrid _gridLevels[_currentLevel];
     Connection _connection;
@@ -39,10 +40,12 @@ public class EnvironmentManager : MonoBehaviour
         // Initialise the voxel grid
         Vector3Int gridSize = new Vector3Int(120, 80, 1);
 
-        for (int i = 0; i < _gridLevels.Length; i++)
+        /*for (int i = 0; i < _gridLevels.Length; i++)
         {
             _gridLevels[i] = new VoxelGrid(gridSize, Vector3.zero, 2, parent: this.transform);
-        }
+        }*/
+
+        _voxelGrid = new VoxelGrid(gridSize, Vector3.zero, 2, parent: this.transform);
 
 
         // Set the random engine's seed
@@ -97,7 +100,8 @@ public class EnvironmentManager : MonoBehaviour
                     _selectedFunction != Function.Eraser &&
                     _selectedFunction != Function.Empty)
                     {
-                        _gridLevels[_currentLevel].FillBucket(voxel, _selectedFunction);
+                        //_gridLevels[_currentLevel].FillBucket(voxel, _selectedFunction);
+                        _voxelGrid.FillBucket(voxel, _selectedFunction);
                     }
                 }
                 else
@@ -154,7 +158,8 @@ public class EnvironmentManager : MonoBehaviour
                 string voxelName = objectHit.name;
                 var index = voxelName.Split('_').Select(v => int.Parse(v)).ToArray();
 
-                selected = _gridLevels[_currentLevel].Voxels[index[0], index[1], index[2]];
+               //selected = _gridLevels[_currentLevel].Voxels[index[0], index[1], index[2]];
+                selected = _voxelGrid.Voxels[index[0], index[1], index[2]];
             }
 
         }
@@ -291,7 +296,8 @@ public class EnvironmentManager : MonoBehaviour
     {
         _rooms = new List<Room>();
 
-        var voxelsToCheck = _gridLevels[_currentLevel].GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
+        //var voxelsToCheck = _gridLevels[_currentLevel].GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
+        var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v => v.VoxelFunction != Function.Wall &&
         v.VoxelFunction != Function.Empty &&
         v.VoxelFunction != Function.Connector &&
         v.VoxelFunction != Function.Eraser &&
@@ -343,7 +349,8 @@ public class EnvironmentManager : MonoBehaviour
         _connections = new List<Connection>();
 
         // Find the voxels of type connection
-        var voxelsToCheck = _gridLevels[_currentLevel].GetFlattenedVoxels().Where(v =>
+        //var voxelsToCheck = _gridLevels[_currentLevel].GetFlattenedVoxels().Where(v =>
+        var voxelsToCheck = _voxelGrid.GetFlattenedVoxels().Where(v =>
         v.VoxelFunction == Function.Connector).ToList();
 
         // Get the voxels that make up this connector
@@ -443,7 +450,8 @@ public class EnvironmentManager : MonoBehaviour
     public void SaveAndReturn()
     {
         AnalyseDrawing();
-        JsonExportImport.SaveScene(_gridLevels[_currentLevel], _rooms);
+        //JsonExportImport.SaveScene(_gridLevels[_currentLevel], _rooms);
+        JsonExportImport.SaveScene(_voxelGrid, _rooms);
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -453,7 +461,8 @@ public class EnvironmentManager : MonoBehaviour
         var scene = scenes.First(s => s.Level == level);
         Debug.Log(scene.JsonVoxels[0].Index);
         Debug.Log(scene.JsonVoxels[0].VoxelFunction);
-        _gridLevels[_currentLevel].SetGridFromSaved(scene);
+        //_gridLevels[_currentLevel].SetGridFromSaved(scene);
+        _voxelGrid.SetGridFromSaved(scene);
     }
 
 

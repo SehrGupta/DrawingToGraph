@@ -36,8 +36,8 @@ public static class JsonExportImport
         try
         {
             if (!Directory.Exists(_path)) Directory.CreateDirectory(_path);
-            //if (!File.Exists(_path + filename)) System.IO.File.WriteAllText(_path + filename, json);
-            //else Debug.LogWarning("File allready exists");
+            //if (!File.Exists(_path + filename)) System.IO.File.WriteAllText(_path + filename, json);     // changed in technical tutorial
+            //else Debug.LogWarning("File allready exists");                                               // changed in technical tutorial
 
             System.IO.File.WriteAllText(_path + filename, json);
         }

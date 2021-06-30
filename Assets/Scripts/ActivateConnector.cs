@@ -1,10 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class ActivateConnector : MonoBehaviour
 {
     public GameObject targetObject;
+    //public Room Source;
+    //public Room End;
+
+    Vector2 Source;
+    Vector2 End;
+
+
+    static Material _lineMaterial;
+
     public void Start()
     {
         targetObject.SetActive(false);
@@ -22,4 +32,7 @@ public class ActivateConnector : MonoBehaviour
             targetObject.SetActive(true);
         }
     }
+
+   
+
 }

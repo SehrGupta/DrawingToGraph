@@ -6,11 +6,16 @@ using UnityEngine;
 
 public class CreateError : MonoBehaviour
 {
-    public GameObject errorWindow;
-    Text errorText;
-    InputField myField;
-    
-    public void OnStoppedEditing(string text)
+    //public GameObject errorWindow;
+    //Text errorText;
+    //InputField myField;
+    public static event Action<bool> Error = delegate { };
+    public GameObject SaveandReturn;
+    public GameObject MakeError;
+    //public Animator animator;
+    //public TMP_Text popUpText;
+
+    /*public void OnStoppedEditing(string text)
     {
         errorText.text = "Mark Staircase on one of your space";
     }
@@ -26,11 +31,37 @@ public class CreateError : MonoBehaviour
         //userOutline = InputUser.AddComponent<Outline>();
         //userOutline.effectColor = Color.red;
         //userOutline.effectDistance = new Vector2(3, -3);
+    }*/
+    /*public void Error(string text)
+    {
+        MakeError.SetActive(true);
+        animator.SetTrigger("SaveandReturn");
+    }*/
+    /*public void OnClick()
+    {
+         //Gameobject current = ActionManager
+    }*/
+    public void ButtonClick()
+    {
+        if (SaveandReturn == true && MakeError.activeInHierarchy == false)
+        {
+            //allows button to be used
+            MakeError.active = true;
+        }
     }
-
-    // Update is called once per frame
-    void Update()
+    public void Update()
     {
         
     }
+    /*public void Error()
+    {
+        if (SaveandReturn.activeInHierarchy == true)
+        {
+            MakeError.SetActive(false);
+        }
+        else MakeError.SetActive(true);
+    }*/
+
+
+
 }
