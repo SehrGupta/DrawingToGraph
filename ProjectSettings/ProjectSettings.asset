@@ -12,11 +12,11 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: Genesis
+  companyName: Plan_Mediterranea
   productName: DrawYourHome
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  m_SplashScreenBackgroundColor: {r: 0.52730507, g: 0.76639384, b: 0.8679245, a: 1}
+  m_SplashScreenBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_ShowUnitySplashScreen: 1
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
@@ -40,14 +40,14 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos:
-  - logo: {fileID: 21300000, guid: d1142cfb09b1dec46a57a03705597383, type: 3}
+  - logo: {fileID: 21300000, guid: d2d9c9eea7cef4d4d96261ab930c44e8, type: 3}
     duration: 2
-  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: d1142cfb09b1dec46a57a03705597383, type: 3}
+  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: d2d9c9eea7cef4d4d96261ab930c44e8, type: 3}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
-  defaultScreenWidthWeb: 1366
-  defaultScreenHeightWeb: 786
+  defaultScreenWidthWeb: 1920
+  defaultScreenHeightWeb: 1080
   m_StereoRenderingPath: 0
   m_ActiveColorSpace: 0
   m_MTRendering: 1
@@ -147,7 +147,8 @@ PlayerSettings:
   resolutionScalingMode: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Standalone: com.PlanA.DrawYourHome
   buildNumber:
     Standalone: 0
     iPhone: 0
@@ -262,7 +263,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: d1142cfb09b1dec46a57a03705597383, type: 3}
+      m_Icon: {fileID: 2800000, guid: d2d9c9eea7cef4d4d96261ab930c44e8, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
@@ -564,6 +565,7 @@ PlayerSettings:
   ps4videoRecordingFeaturesUsed: 0
   ps4contentSearchFeaturesUsed: 0
   ps4CompatibilityPS5: 0
+  ps4AllowPS5Detection: 0
   ps4GPU800MHz: 1
   ps4attribEyeToEyeDistanceSettingVR: 0
   ps4IncludedModules: []

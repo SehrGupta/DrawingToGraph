@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/02.unity
     guid: a16f6f857e0d20645940aa3a5f6a9d5f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Staircase.unity
     guid: d030ef87e28a4d24892fb70942e2ee6a
   - enabled: 1

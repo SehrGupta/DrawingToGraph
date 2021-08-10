@@ -15,7 +15,7 @@ public class Room
     private Vector3 scaleChange, positionChange;
     public Function SelectedFunction { get; private set; }
     VoxelGrid _voxelGrid;
-    
+    public Function _selectedFunction;
 
 
     #region Constructor
@@ -37,7 +37,9 @@ public class Room
         ////////Create Sphere(Node) for each function
         //var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         var go = GameObject.Instantiate(GONode);
+        //GONode = go.GetComponents<Material>(function);
         go.transform.position = CentrePoint + Voxels[0]._voxelGrid.Origin * Voxels[0]._voxelGrid.VoxelSize;
+       
 
         ////Set minimum - maximum value for each function
         if (function != Function.Connector && 
