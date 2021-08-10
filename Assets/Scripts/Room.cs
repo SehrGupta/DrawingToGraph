@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
+using EasyGraph;
 
 public class Room 
 {
-    public Function RoomFunction;
+
+   // public Function RoomFunction;
     public Vector3 CentrePoint;
     public int Area;//== amount of voxels
     public List<Voxel> Voxels;
@@ -16,16 +18,21 @@ public class Room
     public Function SelectedFunction { get; private set; }
     VoxelGrid _voxelGrid;
     public Function _selectedFunction;
-
+    
 
     #region Constructor
 
-    public Room(List<Voxel> voxels, Function function)
+    public Room(VoxelGrid grid, List<Voxel> voxels, Function function)
     {
+        _voxelGrid = grid;
         Voxels = voxels;
         SelectedFunction = function;
 
         GONode = Resources.Load<GameObject>("Prefabs/GONode");
+        
+        var roomNode = GONode.AddComponent<RoomNode>();
+        roomNode.ThisRoom = this;
+
 
         float avgX = (float)voxels.Average(v => v.Index.x);
         float avgY = (float)voxels.Average(v => v.Index.y);
@@ -76,6 +83,8 @@ public class Room
                 scaleChange = new Vector3(5, 5, 5);
             }
         }
+
+        GONode.GetComponent<MeshRenderer>().material = _voxelGrid.FunctionColors[SelectedFunction];
 
 
     }

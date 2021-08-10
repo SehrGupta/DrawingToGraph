@@ -73,9 +73,6 @@ public class VoxelGrid
         { Function.Connector, Resources.Load<Material>("Material/Voxel/Connector") },
         { Function.Staircase, Resources.Load<Material>("Material/Voxel/Staircase") }
 
-
-
-
     };
 
 

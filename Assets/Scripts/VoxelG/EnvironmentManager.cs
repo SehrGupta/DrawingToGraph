@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 using System.Linq;
+using EasyGraph;
 
 // Code referenced from RC4_M3_C2
 public class EnvironmentManager : MonoBehaviour
@@ -33,13 +34,20 @@ public class EnvironmentManager : MonoBehaviour
     public Room End;
 
     public float VoxelSize { get; private set; }
+
+    Dictionary<(Function, Function), float> _functionAttraction = new Dictionary<(Function, Function), float>()
+    {
+        {(Function.Bathroom,Function.Bedroom), 0f },
+        {(Function.Bathroom,Function.Kitchen), 5f }
+    };
+
     #endregion
 
     #region Unity Standard Methods
 
     void Start()
     {
-        
+
         _errorWindow.SetActive(false);
         _selectedFunction = Function.Wall;
         // Initialise the voxel grid
@@ -173,7 +181,7 @@ public class EnvironmentManager : MonoBehaviour
                 string voxelName = objectHit.name;
                 var index = voxelName.Split('_').Select(v => int.Parse(v)).ToArray();
 
-               //selected = _gridLevels[_currentLevel].Voxels[index[0], index[1], index[2]];
+                //selected = _gridLevels[_currentLevel].Voxels[index[0], index[1], index[2]];
                 selected = _voxelGrid.Voxels[index[0], index[1], index[2]];
             }
 
@@ -352,7 +360,7 @@ public class EnvironmentManager : MonoBehaviour
 
             roomVoxels = bfsStepVoxels.SelectMany(l => l.Select(v => v)).ToList();
 
-            _rooms.Add(new Room(roomVoxels, _selectedFunction));
+            _rooms.Add(new Room(_voxelGrid, roomVoxels, _selectedFunction));
             _rooms.Last().AddRoomToVoxels();
 
         }
@@ -490,12 +498,12 @@ public class EnvironmentManager : MonoBehaviour
             var go = new GameObject();
             go.transform.parent = parent.transform;
             var renderer = go.AddComponent<LineRenderer>();
-            
+
             renderer.positionCount = 2;
-            
+
             Vector3 source = connection.Source.CentrePoint; // visualise the nodes
             Vector3 end = connection.End.CentrePoint; // visualise the nodes
-            
+
             renderer.SetPosition(0, source);
             renderer.SetPosition(1, end);
         }
@@ -505,6 +513,37 @@ public class EnvironmentManager : MonoBehaviour
         // Set the Connection source and end as the line renderer points
     }
 
+    public void CreateGraph()
+    {
+        //Check if there are actually rooms to make a graph
+        if (_rooms.Count < 2) return;
+        UndirecteGraph<Room, Edge<Room>> graph;
+        List<Edge<Room>> edges = new List<Edge<Room>>();
+
+        foreach (var connection in _connections)
+        {
+            Edge<Room> edge = new Edge<Room>(connection.Source, connection.End);
+            if (_functionAttraction.ContainsKey((connection.Source.SelectedFunction, connection.End.SelectedFunction)))
+            {
+                edge.Weight = _functionAttraction[(connection.Source.SelectedFunction, connection.End.SelectedFunction)];
+            }
+            else if (_functionAttraction.ContainsKey((connection.End.SelectedFunction, connection.Source.SelectedFunction)))
+            {
+                edge.Weight = _functionAttraction[(connection.End.SelectedFunction, connection.Source.SelectedFunction)];
+            }
+            else
+            {
+                Debug.Log("Weight not defined");
+                edge.Weight = 1f;
+            }
+
+
+            edges.Add(edge);
+        }
+
+        graph = new UndirecteGraph<Room, Edge<Room>>(edges);
+
+    }
 
     #endregion
 }

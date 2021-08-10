@@ -210,7 +210,7 @@ public class JsonRoom
 
     public JsonRoom(Room room, JsonVoxelGrid grid)
     {
-        RoomFunction = room.RoomFunction.ToString();
+        RoomFunction = room.SelectedFunction.ToString();
         CentrePoint = room.CentrePoint;
         Area = room.Area;
         //Voxels = room.Voxels.Select(v => new JsonVoxel(v)).ToList();
