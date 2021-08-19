@@ -34,8 +34,11 @@ public class EnvironmentManager : MonoBehaviour
     public Room End;
 
     public List<Room> Neighbours;
-    List<GameObject> _edgeLines;
+    List<GameObject> _edgeLines = new List<GameObject>();
     List<Edge<Room>> _edges;
+
+    UndirecteGraph<Room, Edge<Room>> _graph;
+
 
 
     public float VoxelSize { get; private set; }
@@ -385,6 +388,30 @@ public class EnvironmentManager : MonoBehaviour
 
         }
         Debug.Log($"Found {_rooms.Count} rooms");
+        CalculateRoomsAreas();
+    }
+
+    private void CalculateRoomsAreas()
+    {
+        float houseVoxels = _rooms.Sum(r => r.Voxels.Count);
+        float houseArea = 0;
+        foreach (var room in _rooms)
+        {
+            float min = Util.AreasPerFunction[room.Function].Item1;
+            float max = Util.AreasPerFunction[room.Function].Item2;
+            float functionTargetArea = min + (max - min) / 2;
+            houseArea += functionTargetArea;
+        }
+
+        foreach (var room in _rooms)
+        {
+            float min = Util.AreasPerFunction[room.Function].Item1;
+            float max = Util.AreasPerFunction[room.Function].Item2;
+            float area = (room.Voxels.Count / houseVoxels) * houseArea;
+
+            float clamped = Mathf.Clamp(area, min, max);
+            room.Area = clamped;
+        }
     }
 
     public void AnalyseConnections()
@@ -449,40 +476,8 @@ public class EnvironmentManager : MonoBehaviour
             if (connectedRooms.Count >= 2)
                 _connections.Add(new Connection(connectedRooms[0], connectedRooms[1], connectionVoxels));
 
-
-            // Find out which rooms the neighbours belong to
-            // Store in the rooms their neighbouring rooms
-            /*foreach (var connectionVoxel in connectionVoxels)
-            {
-                
-                foreach (var voxel in _room.Voxels)
-                {
-                    if (connectionVoxel.InRoom == voxel.InRoom)
-                    {
-                        Debug.Log($"Found connection for voxel {connectionVoxel}");
-                    }
-                }
-                
-            }
-            var roomsToCheck = _room.Voxels.Where(v => v.VoxelFunction == Function.Connector).ToList();
-
-            //(_connection.Source && _connection.End => Function.Connector).ToList();
-            foreach (var neighbour in _rooms)
-            {
-                if (neighbour.RoomFunction == Function.Connector)
-                {
-                    foundNewVoxels = true;
-                    _rooms.Add(neighbour);
-                    // roomsToCheck.Remove();
-                }
-
-                _rooms.Insert(1, _connection.Source);
-                _rooms.Insert(2, _connection.End);
-            }
-
-            */
         }
-
+        Debug.Log(_connections.Count);
         //return new List<Connection>();
 
     }
@@ -496,8 +491,9 @@ public class EnvironmentManager : MonoBehaviour
         //JsonExportImport.SaveScene(_gridLevels[_currentLevel], _rooms);
         //JsonExportImport.SaveScene(_voxelGrid, _rooms);
         var scene = JsonExportImport.ConvertToJsonScene(_voxelGrid, _rooms);
-        SessionManager.AddScene(scene);
-        SceneManager.LoadScene("MainMenu");
+        // COMMENTED OUT THE LOAD SCENE ----------------------------------------------------------------------
+        //SessionManager.AddScene(scene);
+        //SceneManager.LoadScene("MainMenu");
     }
 
     public void LoadFromFile(int level)
@@ -538,67 +534,11 @@ public class EnvironmentManager : MonoBehaviour
         _selectedFunction = function;
         //GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[function];
     }
-    
+
     public void CreateGraph()
     {
-        //Check if there are actually rooms to make a graph
-        if (_rooms.Count < 2) return;
-        UndirecteGraph<Room, Edge<Room>> graph;
-        List<Edge<Room>> edges = new List<Edge<Room>>();
-
-        foreach (var connection in _connections)
-        {
-            Edge<Room> edge = new Edge<Room>(connection.Source, connection.End);
-            if (_functionAttraction.ContainsKey((connection.Source.SelectedFunction, connection.End.SelectedFunction)))
-            {
-                edge.Weight = _functionAttraction[(connection.Source.SelectedFunction, connection.End.SelectedFunction)];
-            }
-            else if (_functionAttraction.ContainsKey((connection.End.SelectedFunction, connection.Source.SelectedFunction)))
-            {
-                edge.Weight = _functionAttraction[(connection.End.SelectedFunction, connection.Source.SelectedFunction)];
-            }
-            else
-            {
-                Debug.Log("Weight not defined");
-                edge.Weight = 1f;
-            }
-
-
-            edges.Add(edge);
-        }
-
-        graph = new UndirecteGraph<Room, Edge<Room>>(edges);
-
-    }
-    
-    public void CreateGraphLines()
-    {
-        
-        _edgeLines.ForEach(e => GameObject.Destroy(e));
-        _edgeLines.Clear();
-        List<Edge<Room>> edges = new List<Edge<Room>>();
-        //Edge<Room> edge = new Edge<Room>(connection.Source, connection.End);
-        foreach (var connection in _connections)
-        {
-            
-            //Calculate the difference between the edge length and the desired length
-            float relaxedDistance = Mathf.Abs((float) - (connection.Source.Position - connection.End.Position).magnitude);
-            float colour = Mathf.Clamp01(relaxedDistance / 2);
-
-            //Draw lines
-            GameObject edgeLine = new GameObject($"Edge {_edgeLines.Count}");
-            LineRenderer renderer = edgeLine.AddComponent<LineRenderer>();
-            renderer.SetPosition(0, connection.Source.Position);
-            renderer.SetPosition(1, connection.End.Position);
-
-            //Set colours
-            renderer.material = Resources.Load<Material>("Material/LineRenderer");
-            renderer.startWidth = 0.2f;
-            renderer.startColor = new Color(colour, 1 - colour, 0f);
-            renderer.endWidth = 0.2f;
-            renderer.endColor = new Color(colour, 1 - colour, 0f);
-            _edgeLines.Add(edgeLine);
-        }
+        var graphManager = GameObject.Find("GraphManager").GetComponent<GraphManager>();
+        graphManager.CreateGraph(_rooms, _connections);
     }
     #endregion
 }

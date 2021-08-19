@@ -10,7 +10,7 @@ public class Room
 
    // public Function RoomFunction;
     public Vector3 CentrePoint;
-    public int Area;//== amount of voxels
+    public float Area;
     public List<Voxel> Voxels;
     public List<Room> Neighbours;
     public GameObject GONode;
@@ -18,12 +18,13 @@ public class Room
     public Function SelectedFunction { get; private set; }
     VoxelGrid _voxelGrid;
     public Function _selectedFunction;
-    public Vector3 position;
+    //public Vector3 position;
     public Vector3 velocity;
     public Function Function;
     private List<Connection> _connections;
     public Room Source;
     public Room End;
+    private float _regionSize = 30f;
 
     #region Constructor
 
@@ -33,25 +34,21 @@ public class Room
         Voxels = voxels;
         SelectedFunction = function;
 
-        GONode = Resources.Load<GameObject>("Prefabs/GONode");
+        var nodePrefab = Resources.Load<GameObject>("Prefabs/GONode");
+        GONode = GameObject.Instantiate(nodePrefab);
         GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[function];
-        //GONode.transform.localScale = Vector3.one * radius;
+
         var roomNode = GONode.AddComponent<RoomNode>();
         roomNode.ThisRoom = this;
 
 
-        float avgX = (float)voxels.Average(v => v.Index.x);
-        float avgY = (float)voxels.Average(v => v.Index.y);
-        float avgZ = (float)voxels.Average(v => v.Index.z);
+        float rndX = UnityEngine.Random.Range(0, _regionSize);
+        float rndY = UnityEngine.Random.Range(0, _regionSize);
+        float rndZ = UnityEngine.Random.Range(0, _regionSize);
 
-        CentrePoint = new Vector3(avgX, avgY, avgZ);
+        CentrePoint = new Vector3(rndX, rndY, rndZ);
 
-        ////////Create Sphere at origin
-        ////////Create Sphere(Node) for each function
-        //var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        var go = GameObject.Instantiate(GONode);
-        //GONode = go.GetComponents<Material>(function);
-        go.transform.position = CentrePoint + Voxels[0]._voxelGrid.Origin * Voxels[0]._voxelGrid.VoxelSize;
+        GONode.transform.position = CentrePoint;
        
 
         ////Set minimum - maximum value for each function
@@ -147,7 +144,7 @@ public class Room
     { 
         foreach (var room in Neighbours)
         {
-            room.position += room.velocity * Time.deltaTime;
+            room.CentrePoint += room.velocity * Time.deltaTime;
         }
     }
 
@@ -172,7 +169,8 @@ public class Room
 
     public void MoveRoom()
     {
-        if (_relax) GONode.transform.Translate(_velocity * Time.deltaTime, Space.World);
+        GONode.transform.Translate(_velocity * Time.deltaTime, Space.World);
+        CentrePoint = GONode.transform.position;
     }
 
     /*public class GONode
