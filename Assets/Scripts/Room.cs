@@ -18,7 +18,12 @@ public class Room
     public Function SelectedFunction { get; private set; }
     VoxelGrid _voxelGrid;
     public Function _selectedFunction;
-    
+    public Vector3 position;
+    public Vector3 velocity;
+    public Function Function;
+    private List<Connection> _connections;
+    public Room Source;
+    public Room End;
 
     #region Constructor
 
@@ -29,7 +34,8 @@ public class Room
         SelectedFunction = function;
 
         GONode = Resources.Load<GameObject>("Prefabs/GONode");
-        
+        GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[function];
+        //GONode.transform.localScale = Vector3.one * radius;
         var roomNode = GONode.AddComponent<RoomNode>();
         roomNode.ThisRoom = this;
 
@@ -120,5 +126,71 @@ public class Room
     //}
 
 
+    #endregion
+
+    #region PrivateFields
+
+    public Vector3 Position
+    {
+        get
+        {
+            return GONode.transform.position;
+        }
+    }
+
+    private bool _relax;
+    private Vector3 _velocity;
+  
+    #endregion
+
+    public void Update()
+    { 
+        foreach (var room in Neighbours)
+        {
+            room.position += room.velocity * Time.deltaTime;
+        }
+    }
+
+
+
+    #region public Methods
+    public void CalculateVelocity(UndirecteGraph<Room, Edge<Room>> graph, float speed)
+    {
+
+        List<Edge<Room>> connectedEdges = graph.GetConnectedEdges(this);
+        Vector3 velocity = Vector3.zero;
+
+        foreach (var edge in connectedEdges)
+        {
+            Room connectedVertex = edge.GetOtherVertex(this);
+            float weight = (float)edge.Weight;
+            Vector3 direction = connectedVertex.Position - this.Position;
+            velocity += direction * (direction.magnitude - weight);
+        }
+        _velocity = velocity * speed;
+    }
+
+    public void MoveRoom()
+    {
+        if (_relax) GONode.transform.Translate(_velocity * Time.deltaTime, Space.World);
+    }
+
+    /*public class GONode
+    {
+        public Vector3 position;
+        public Vector3 velocity;
+        public List<GONode> children;
+
+    }*/
+
+    /*public void GenerateGraph()
+    {
+        Edge<Room> edge = new Edge<Room>(connection.Source, connection.End);
+        foreach (var nodes in Neighbours)
+        {
+            
+            Gizmos.DrawLine(connection.Source, connection.End);
+        }
+    }*/
     #endregion
 }

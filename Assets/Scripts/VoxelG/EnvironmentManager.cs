@@ -33,12 +33,32 @@ public class EnvironmentManager : MonoBehaviour
     public Room Source;
     public Room End;
 
+    public List<Room> Neighbours;
+    List<GameObject> _edgeLines;
+    List<Edge<Room>> _edges;
+
+
     public float VoxelSize { get; private set; }
 
     Dictionary<(Function, Function), float> _functionAttraction = new Dictionary<(Function, Function), float>()
     {
+        {(Function.Dining,Function.LivingRoom), 0f },
+        {(Function.Kitchen,Function.Dining), 0f },
+        {(Function.Kitchen,Function.Bedroom), 1f },
         {(Function.Bathroom,Function.Bedroom), 0f },
-        {(Function.Bathroom,Function.Kitchen), 5f }
+        {(Function.LivingRoom,Function.Kitchen), 0f },
+        {(Function.Bedroom,Function.Closet), 0f },
+        {(Function.Bathroom,Function.Dining), 0f },
+        {(Function.Kitchen,Function.Courtyard), 1f },
+        {(Function.LivingRoom,Function.Bedroom), 0f },
+        {(Function.LivingRoom,Function.Closet), 2f },
+        {(Function.Dining,Function.Bedroom), 2f },
+        {(Function.Kitchen,Function.Closet), 2f },
+        {(Function.Kitchen,Function.Bathroom), 3f },
+        {(Function.Closet,Function.Courtyard), 4f },
+        {(Function.Bathroom,Function.Courtyard), 4f },
+        {(Function.Bedroom,Function.Courtyard), 3f },
+        {(Function.Dining,Function.Closet), 4f }
     };
 
     #endregion
@@ -512,7 +532,13 @@ public class EnvironmentManager : MonoBehaviour
         // Add the GO to the LineRenderers game object
         // Set the Connection source and end as the line renderer points
     }
-
+    public void ColorNode(VoxelGrid grid, List<Voxel> voxels, Function function)
+    {
+        _voxelGrid = grid;
+        _selectedFunction = function;
+        //GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[function];
+    }
+    
     public void CreateGraph()
     {
         //Check if there are actually rooms to make a graph
@@ -544,6 +570,35 @@ public class EnvironmentManager : MonoBehaviour
         graph = new UndirecteGraph<Room, Edge<Room>>(edges);
 
     }
+    
+    public void CreateGraphLines()
+    {
+        
+        _edgeLines.ForEach(e => GameObject.Destroy(e));
+        _edgeLines.Clear();
+        List<Edge<Room>> edges = new List<Edge<Room>>();
+        //Edge<Room> edge = new Edge<Room>(connection.Source, connection.End);
+        foreach (var connection in _connections)
+        {
+            
+            //Calculate the difference between the edge length and the desired length
+            float relaxedDistance = Mathf.Abs((float) - (connection.Source.Position - connection.End.Position).magnitude);
+            float colour = Mathf.Clamp01(relaxedDistance / 2);
 
+            //Draw lines
+            GameObject edgeLine = new GameObject($"Edge {_edgeLines.Count}");
+            LineRenderer renderer = edgeLine.AddComponent<LineRenderer>();
+            renderer.SetPosition(0, connection.Source.Position);
+            renderer.SetPosition(1, connection.End.Position);
+
+            //Set colours
+            renderer.material = Resources.Load<Material>("Material/LineRenderer");
+            renderer.startWidth = 0.2f;
+            renderer.startColor = new Color(colour, 1 - colour, 0f);
+            renderer.endWidth = 0.2f;
+            renderer.endColor = new Color(colour, 1 - colour, 0f);
+            _edgeLines.Add(edgeLine);
+        }
+    }
     #endregion
 }
