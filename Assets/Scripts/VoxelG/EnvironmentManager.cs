@@ -514,7 +514,6 @@ public class EnvironmentManager : MonoBehaviour
             var go = new GameObject();
             go.transform.parent = parent.transform;
             var renderer = go.AddComponent<LineRenderer>();
-
             renderer.positionCount = 2;
 
             Vector3 source = connection.Source.CentrePoint; // visualise the nodes

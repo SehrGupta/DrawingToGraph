@@ -100,10 +100,13 @@ static class Util
     /// </summary>
     public static Dictionary<Function, (float, float)> AreasPerFunction = new Dictionary<Function, (float, float)>()
     {
-        {Function.Bathroom, (4, 8) },
+        {Function.Bathroom, (4, 6) },
         {Function.Kitchen, (6, 12) },
-        {Function.Bedroom, (8.5f, 15f) },
-        {Function.Dining, (4, 8) },
-        {Function.LivingRoom, (9, 16) }
+        {Function.Bedroom, (9f, 16f) },
+        {Function.Dining, (6, 12) },
+        {Function.LivingRoom, (9, 16) },
+        {Function.Courtyard, (12, 25) },
+        {Function.Closet, (4, 9) }
+
     };
 }

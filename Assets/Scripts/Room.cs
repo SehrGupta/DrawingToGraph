@@ -25,6 +25,9 @@ public class Room
     public Room Source;
     public Room End;
     private float _regionSize = 30f;
+    private float _centerX;
+    private float _centerY;
+    private float _radius;
 
     #region Constructor
 
@@ -190,5 +193,32 @@ public class Room
             Gizmos.DrawLine(connection.Source, connection.End);
         }
     }*/
+
+    /*typedef strcut()
+    {
+        float centerX;
+        float centerY;
+        float radius;
+    }*/
+
+    public void AreaGeneration()
+    {       
+        Collider m_Collider;
+        Vector3 m_Center;
+        Vector3 m_Size, m_Min, m_Max;
+
+        //Fetch the Collider from the GameObject
+        m_Collider = GONode.GetComponent<Collider>();
+        //Fetch the center of the Collider volume
+        m_Center = m_Collider.bounds.center;
+        //Fetch the size of the Collider volume
+        m_Size = m_Collider.bounds.size;
+        //Fetch the minimum and maximum bounds of the Collider volume
+        m_Min = m_Collider.bounds.min;
+        m_Max = m_Collider.bounds.max;
+
+    }
+
+
     #endregion
 }

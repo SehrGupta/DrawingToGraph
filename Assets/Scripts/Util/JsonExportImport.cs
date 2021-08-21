@@ -212,7 +212,7 @@ public class JsonRoom
     {
         RoomFunction = room.SelectedFunction.ToString();
         CentrePoint = room.CentrePoint;
-        Area = room.Area;
+        Area = (int)room.Area;
         //Voxels = room.Voxels.Select(v => new JsonVoxel(v)).ToList();
         Voxels = new List<Vector3Int>();
         foreach (var voxel in room.Voxels)
