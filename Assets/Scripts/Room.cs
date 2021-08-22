@@ -39,11 +39,12 @@ public class Room
 
         var nodePrefab = Resources.Load<GameObject>("Prefabs/GONode");
         GONode = GameObject.Instantiate(nodePrefab);
-        GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[function];
+        GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[_selectedFunction];
 
         var roomNode = GONode.AddComponent<RoomNode>();
         roomNode.ThisRoom = this;
 
+        
 
         float rndX = UnityEngine.Random.Range(0, _regionSize);
         float rndY = UnityEngine.Random.Range(0, _regionSize);
@@ -52,7 +53,10 @@ public class Room
         CentrePoint = new Vector3(rndX, rndY, rndZ);
 
         GONode.transform.position = CentrePoint;
-       
+
+
+        
+
 
         ////Set minimum - maximum value for each function
         if (function != Function.Connector && 
@@ -94,6 +98,7 @@ public class Room
 
 
     }
+    
 
     #endregion
 

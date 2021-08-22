@@ -9,6 +9,9 @@ using EasyGraph;
 // Code referenced from RC4_M3_C2
 public class EnvironmentManager : MonoBehaviour
 {
+    //Cameras
+    public GameObject mainUICam;
+    public GameObject nodeViewCam;
     #region Fields and properties
     //public Voxel Voxels;
     //VoxelGrid[] _gridLevels;
@@ -36,9 +39,9 @@ public class EnvironmentManager : MonoBehaviour
     public List<Room> Neighbours;
     List<GameObject> _edgeLines = new List<GameObject>();
     List<Edge<Room>> _edges;
-
+    public GameObject GONode;
     UndirecteGraph<Room, Edge<Room>> _graph;
-
+    VoxelGrid voxelGrid;
 
 
     public float VoxelSize { get; private set; }
@@ -47,21 +50,21 @@ public class EnvironmentManager : MonoBehaviour
     {
         {(Function.Dining,Function.LivingRoom), 0f },
         {(Function.Kitchen,Function.Dining), 0f },
-        {(Function.Kitchen,Function.Bedroom), 1f },
+        {(Function.Kitchen,Function.Bedroom), 10f },
         {(Function.Bathroom,Function.Bedroom), 0f },
         {(Function.LivingRoom,Function.Kitchen), 0f },
         {(Function.Bedroom,Function.Closet), 0f },
         {(Function.Bathroom,Function.Dining), 0f },
-        {(Function.Kitchen,Function.Courtyard), 1f },
+        {(Function.Kitchen,Function.Courtyard), 10f },
         {(Function.LivingRoom,Function.Bedroom), 0f },
-        {(Function.LivingRoom,Function.Closet), 2f },
-        {(Function.Dining,Function.Bedroom), 2f },
-        {(Function.Kitchen,Function.Closet), 2f },
-        {(Function.Kitchen,Function.Bathroom), 3f },
-        {(Function.Closet,Function.Courtyard), 4f },
-        {(Function.Bathroom,Function.Courtyard), 4f },
-        {(Function.Bedroom,Function.Courtyard), 3f },
-        {(Function.Dining,Function.Closet), 4f }
+        {(Function.LivingRoom,Function.Closet), 20f },
+        {(Function.Dining,Function.Bedroom), 20f },
+        {(Function.Kitchen,Function.Closet), 020f },
+        {(Function.Kitchen,Function.Bathroom), 30f },
+        {(Function.Closet,Function.Courtyard), 40f },
+        {(Function.Bathroom,Function.Courtyard), 40f },
+        {(Function.Bedroom,Function.Courtyard), 30f },
+        {(Function.Dining,Function.Closet), 40f }
     };
 
     #endregion
@@ -333,8 +336,18 @@ public class EnvironmentManager : MonoBehaviour
 
     public void AnalyseDrawing()
     {
+      
+        Debug.Log(" this part is  running");
         AnalyseRooms();
+        Debug.Log("Is this really running?");
         AnalyseConnections();
+
+        /*Camera mCam = mainUICam.GetComponent<Camera>();
+        Camera nCam = nodeViewCam.GetComponent<Camera>();
+        mCam.enabled = false;
+        nCam.enabled = true;*/
+
+       
     }
 
 
@@ -425,7 +438,7 @@ public class EnvironmentManager : MonoBehaviour
 
         // Get the voxels that make up this connector
         // Get the neighbours of the connector
-
+        Debug.Log("Voxel is To Check:" + voxelsToCheck);
         while (voxelsToCheck.Count > 0)
         {
             var start = voxelsToCheck[0];
@@ -458,6 +471,7 @@ public class EnvironmentManager : MonoBehaviour
 
             connectionVoxels = bfsStepVoxels.SelectMany(l => l.Select(v => v)).ToList();
 
+            Debug.Log("Connection Voxels:" + connectionVoxels.Count);
 
             List<Room> connectedRooms = new List<Room>();
             foreach (var voxel in connectionVoxels)
@@ -487,13 +501,22 @@ public class EnvironmentManager : MonoBehaviour
 
     public void SaveAndReturn()
     {
+        //Change camera to view nodes
+        /*Camera mCam = mainUICam.GetComponent<Camera>();
+        Camera nCam = nodeViewCam.GetComponent<Camera>();
+        nodeViewCam.SetActive(true);
+        mCam.enabled = false;
+        nCam.enabled = true;*/
+     
         AnalyseDrawing();
+       
         //JsonExportImport.SaveScene(_gridLevels[_currentLevel], _rooms);
         //JsonExportImport.SaveScene(_voxelGrid, _rooms);
         var scene = JsonExportImport.ConvertToJsonScene(_voxelGrid, _rooms);
         // COMMENTED OUT THE LOAD SCENE ----------------------------------------------------------------------
         //SessionManager.AddScene(scene);
-        //SceneManager.LoadScene("MainMenu");
+        //SceneManager.LoadScene("Nodes");
+
     }
 
     public void LoadFromFile(int level)
@@ -527,17 +550,31 @@ public class EnvironmentManager : MonoBehaviour
         // Add the GO to the LineRenderers game object
         // Set the Connection source and end as the line renderer points
     }
-    public void ColorNode(VoxelGrid grid, List<Voxel> voxels, Function function)
+    /*public void ColorNode(VoxelGrid grid, List<Voxel> voxels, Function function)
     {
         _voxelGrid = grid;
         _selectedFunction = function;
-        //GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[function];
-    }
-
+        GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[function];
+    }*/
+    
     public void CreateGraph()
     {
+        //var scene = JsonExportImport.ConvertToJsonScene(_voxelGrid, _rooms);
+        //SessionManager.AddScene(scene);
+        //SceneManager.LoadScene("Nodes");
         var graphManager = GameObject.Find("GraphManager").GetComponent<GraphManager>();
         graphManager.CreateGraph(_rooms, _connections);
+        Debug.Log(_connections.Count);
+    }
+
+    public void ColorNode()
+    {
+        Camera mCam = mainUICam.GetComponent<Camera>();
+        Camera nCam = nodeViewCam.GetComponent<Camera>();
+        nodeViewCam.SetActive(true);
+        mCam.enabled = false;
+        nCam.enabled = true;
+        //GONode.GetComponent<Renderer>().material = voxelGrid.FunctionColors[key:_selectedFunction] ; 
     }
     #endregion
 }

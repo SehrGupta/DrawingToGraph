@@ -78,21 +78,21 @@ static class Util
     {
         {(Function.Dining,Function.LivingRoom), 0f },
         {(Function.Kitchen,Function.Dining), 0f },
-        {(Function.Kitchen,Function.Bedroom), 1f },
+        {(Function.Kitchen,Function.Bedroom), 3f },
         {(Function.Bathroom,Function.Bedroom), 0f },
         {(Function.LivingRoom,Function.Kitchen), 0f },
         {(Function.Bedroom,Function.Closet), 0f },
         {(Function.Bathroom,Function.Dining), 0f },
-        {(Function.Kitchen,Function.Courtyard), 1f },
+        {(Function.Kitchen,Function.Courtyard), 3f },
         {(Function.LivingRoom,Function.Bedroom), 0f },
-        {(Function.LivingRoom,Function.Closet), 2f },
-        {(Function.Dining,Function.Bedroom), 2f },
-        {(Function.Kitchen,Function.Closet), 2f },
-        {(Function.Kitchen,Function.Bathroom), 3f },
-        {(Function.Closet,Function.Courtyard), 4f },
-        {(Function.Bathroom,Function.Courtyard), 4f },
-        {(Function.Bedroom,Function.Courtyard), 3f },
-        {(Function.Dining,Function.Closet), 4f }
+        {(Function.LivingRoom,Function.Closet), 6f },
+        {(Function.Dining,Function.Bedroom), 6f },
+        {(Function.Kitchen,Function.Closet), 6f },
+        {(Function.Kitchen,Function.Bathroom), 8f },
+        {(Function.Closet,Function.Courtyard), 10f },
+        {(Function.Bathroom,Function.Courtyard), 10f },
+        {(Function.Bedroom,Function.Courtyard), 8f },
+        {(Function.Dining,Function.Closet), 10f }
     };
 
     /// <summary>

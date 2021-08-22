@@ -34,31 +34,37 @@ public class GraphManager : MonoBehaviour
         _rooms = rooms;
         _connections = connections;
         //Check if there are actually rooms to make a graph
-        if (_rooms.Count < 2) return;
+        if (_rooms.Count < 2)
+        {
+            return;
+        }
+
         //UndirecteGraph<Room, Edge<Room>> graph;
         List<Edge<Room>> edges = new List<Edge<Room>>();
 
-        foreach (var connection in _connections)
-        {
-            Edge<Room> edge = new Edge<Room>(connection.Source, connection.End);
-            if (Util.FunctionAttraction.ContainsKey((connection.Source.SelectedFunction, connection.End.SelectedFunction)))
-            {
+       foreach (var connection in _connections)
+       {
+             Edge<Room> edge = new Edge<Room>(connection.Source, connection.End);
+             if (Util.FunctionAttraction.ContainsKey((connection.Source.SelectedFunction, connection.End.SelectedFunction)))
+             {
 
-                edge.Weight = Util.FunctionAttraction[(connection.Source.SelectedFunction, connection.End.SelectedFunction)];
-            }
-            else if (Util.FunctionAttraction.ContainsKey((connection.End.SelectedFunction, connection.Source.SelectedFunction)))
-            {
-                edge.Weight = Util.FunctionAttraction[(connection.End.SelectedFunction, connection.Source.SelectedFunction)];
-            }
-            else
-            {
-                Debug.Log("Setting default weight");
-                edge.Weight = 1f;
-            }
+                 edge.Weight = Util.FunctionAttraction[(connection.Source.SelectedFunction, connection.End.SelectedFunction)];
+             }
+             else if (Util.FunctionAttraction.ContainsKey((connection.End.SelectedFunction, connection.Source.SelectedFunction)))
+             {
+                 edge.Weight = Util.FunctionAttraction[(connection.End.SelectedFunction, connection.Source.SelectedFunction)];
+             }
+             else
+             {
+                 Debug.Log("Setting default weight");
+                 edge.Weight = 5f;
+             }
 
 
-            edges.Add(edge);
-        }
+             edges.Add(edge);
+       }
+
+  
 
         _graph = new UndirecteGraph<Room, Edge<Room>>(edges);
 
@@ -66,7 +72,7 @@ public class GraphManager : MonoBehaviour
         _relax = true;
     }
 
-    private void CreateGraphLines()
+    public void CreateGraphLines()
     {
 
         _edgeLines.ForEach(e => GameObject.Destroy(e));
@@ -81,9 +87,9 @@ public class GraphManager : MonoBehaviour
             renderer.SetPosition(0, edge.Source.CentrePoint);
             renderer.SetPosition(1, edge.Target.CentrePoint);
             renderer.startWidth = 0.2f;
-            renderer.startColor = new Color(1f, 0f, 0f);
+            renderer.startColor = new Color(98f, 250f, 145f);
             renderer.endWidth = 0.2f;
-            renderer.startColor = new Color(0f, 1f, 0f);
+            renderer.startColor = new Color(98f, 250f, 145f);
             _edgeLines.Add(edgeLine);
         }
     }
