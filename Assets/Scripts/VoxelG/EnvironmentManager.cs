@@ -501,14 +501,9 @@ public class EnvironmentManager : MonoBehaviour
 
     public void SaveAndReturn()
     {
-        //Change camera to view nodes
-        /*Camera mCam = mainUICam.GetComponent<Camera>();
-        Camera nCam = nodeViewCam.GetComponent<Camera>();
-        nodeViewCam.SetActive(true);
-        mCam.enabled = false;
-        nCam.enabled = true;*/
      
-        AnalyseDrawing();
+        //AnalyseDrawing();
+        AnalyseRooms();
        
         //JsonExportImport.SaveScene(_gridLevels[_currentLevel], _rooms);
         //JsonExportImport.SaveScene(_voxelGrid, _rooms);

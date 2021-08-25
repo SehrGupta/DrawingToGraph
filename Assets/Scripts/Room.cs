@@ -39,7 +39,7 @@ public class Room
 
         var nodePrefab = Resources.Load<GameObject>("Prefabs/GONode");
         GONode = GameObject.Instantiate(nodePrefab);
-        GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[_selectedFunction];
+        //GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors[_selectedFunction];
 
         var roomNode = GONode.AddComponent<RoomNode>();
         roomNode.ThisRoom = this;

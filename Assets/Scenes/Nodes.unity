@@ -304,7 +304,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.103773594, g: 0.103773594, b: 0.103773594, a: 0}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -738,6 +738,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42e2c6c436cc96747882c5241715c8be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainUICam: {fileID: 0}
+  nodeViewCam: {fileID: 0}
   v: {x: 0, y: 0, z: 0}
   _errorWindow: {fileID: 0}
   GONode: {fileID: 0}
