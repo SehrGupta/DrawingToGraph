@@ -14,7 +14,7 @@ public class EnvironmentManager : MonoBehaviour
     public GameObject nodeViewCam;
     #region Fields and properties
     //public Voxel Voxels;
-    //VoxelGrid[] _gridLevels;
+    VoxelGrid[] _gridLevels;
     VoxelGrid _voxelGrid;
     int _currentLevel = 0;
     //VoxelGrid _gridLevels[_currentLevel];
@@ -401,7 +401,7 @@ public class EnvironmentManager : MonoBehaviour
 
         }
         Debug.Log($"Found {_rooms.Count} rooms");
-        CalculateRoomsAreas();
+        //CalculateRoomsAreas();
     }
 
     private void CalculateRoomsAreas()
@@ -502,8 +502,8 @@ public class EnvironmentManager : MonoBehaviour
     public void SaveAndReturn()
     {
      
-        //AnalyseDrawing();
-        AnalyseRooms();
+        AnalyseDrawing();
+        //AnalyseRooms();
        
         //JsonExportImport.SaveScene(_gridLevels[_currentLevel], _rooms);
         //JsonExportImport.SaveScene(_voxelGrid, _rooms);
@@ -512,6 +512,16 @@ public class EnvironmentManager : MonoBehaviour
         //SessionManager.AddScene(scene);
         //SceneManager.LoadScene("Nodes");
 
+    }
+
+    public void ReturnHome()
+    {
+        AnalyseRooms();
+        //JsonExportImport.SaveScene(_gridLevels[_currentLevel], _rooms);
+        JsonExportImport.SaveScene(_voxelGrid, _rooms);
+        //var scene = JsonExportImport.ConvertToJsonScene(_voxelGrid, _rooms);
+        //SessionManager.AddScene(scene);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void LoadFromFile(int level)
@@ -554,22 +564,25 @@ public class EnvironmentManager : MonoBehaviour
     
     public void CreateGraph()
     {
-        //var scene = JsonExportImport.ConvertToJsonScene(_voxelGrid, _rooms);
-        //SessionManager.AddScene(scene);
-        //SceneManager.LoadScene("Nodes");
+        
         var graphManager = GameObject.Find("GraphManager").GetComponent<GraphManager>();
         graphManager.CreateGraph(_rooms, _connections);
         Debug.Log(_connections.Count);
+        //var scene = JsonExportImport.ConvertToJsonScene(_voxelGrid, _rooms);
+        //SessionManager.AddScene(scene);
+        //SceneManager.LoadScene("Nodes");
     }
 
     public void ColorNode()
     {
+      
+        //GONode.GetComponent<Renderer>().material = _voxelGrid.FunctionColors [_selectedFunction];
         Camera mCam = mainUICam.GetComponent<Camera>();
         Camera nCam = nodeViewCam.GetComponent<Camera>();
         nodeViewCam.SetActive(true);
         mCam.enabled = false;
         nCam.enabled = true;
-        //GONode.GetComponent<Renderer>().material = voxelGrid.FunctionColors[key:_selectedFunction] ; 
+        
     }
     #endregion
 }

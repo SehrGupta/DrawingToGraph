@@ -13,6 +13,7 @@ public class GraphManager : MonoBehaviour
     bool _relax = false;
     List<GameObject> _edgeLines = new List<GameObject>();
 
+   
 
     // Update is called once per frame
     void Update()
@@ -87,9 +88,16 @@ public class GraphManager : MonoBehaviour
             renderer.SetPosition(0, edge.Source.CentrePoint);
             renderer.SetPosition(1, edge.Target.CentrePoint);
             renderer.startWidth = 0.2f;
-            renderer.startColor = new Color(98f, 250f, 145f);
+            Resources.Load<Material>("Material/LineRenderer");
+            //renderer.startColor = new Color(98f, 250f, 145f);
             renderer.endWidth = 0.2f;
-            renderer.startColor = new Color(98f, 250f, 145f);
+            //renderer.startColor = new Color(98f, 250f, 145f);
+
+            var Linerenderer = renderer.GetComponent<Renderer>();
+            
+            renderer.material.SetColor("Material/LineRenderer",Color.blue);
+            //renderer.material startColor { get; set; }
+            //renderer.endColor { get; set; }
             _edgeLines.Add(edgeLine);
         }
     }
